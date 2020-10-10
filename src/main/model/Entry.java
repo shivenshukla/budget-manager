@@ -1,7 +1,6 @@
 package model;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 // Represents an entry for a budget having a description, amount (in dollars), and date of entry
 public abstract class Entry {

@@ -25,4 +25,11 @@ public class IncomeTest {
         assertEquals(2019, testIncome.getDate().getWeekYear());
         assertEquals(IncomeCategory.UNSPECIFIED, testIncome.getCategory());
     }
+
+    @Test
+    void testSetCategory() {
+        assertEquals(IncomeCategory.UNSPECIFIED, testIncome.getCategory());
+        testIncome.setCategory(IncomeCategory.ALLOWANCE);
+        assertEquals(IncomeCategory.ALLOWANCE, testIncome.getCategory());
+    }
 }

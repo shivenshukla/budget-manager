@@ -1,7 +1,6 @@
 package model;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 // Represents an expense having a description, amount (in dollars), date of entry, and category
 public class Expense extends Entry {

@@ -25,4 +25,11 @@ class ExpenseTest {
         assertEquals(2020, testExpense.getDate().getWeekYear());
         assertEquals(ExpenseCategory.UNSPECIFIED, testExpense.getCategory());
     }
+
+    @Test
+    void testSetCategory() {
+        assertEquals(ExpenseCategory.UNSPECIFIED, testExpense.getCategory());
+        testExpense.setCategory(ExpenseCategory.ENTERTAINMENT);
+        assertEquals(ExpenseCategory.ENTERTAINMENT, testExpense.getCategory());
+    }
 }
