@@ -2,7 +2,7 @@ package model;
 
 import java.util.Calendar;
 
-// Represents an entry for a budget having a description, amount (in dollars), and date of entry
+// Represents an entry having a description, amount (in dollars), and date of entry
 public abstract class Entry {
     protected String description;
     protected double amount;
