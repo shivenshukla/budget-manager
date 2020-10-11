@@ -27,10 +27,27 @@ public class IncomeTest {
     }
 
     @Test
-    void testSetCategory() {
-        assertEquals(IncomeCategory.UNSPECIFIED, testIncome.getCategory());
+    void testSetters() {
+        Calendar otherDate = new GregorianCalendar();
+        otherDate.set(2019, Calendar.JUNE, 21);
+
+        testIncome.setDescription("Salary from full-time job");
+        testIncome.setAmount(3500.00);
+        testIncome.setDate(otherDate);
         testIncome.setCategory(IncomeCategory.ALLOWANCE);
+
+        assertEquals("Salary from full-time job", testIncome.getDescription());
+        assertEquals(3500.00, testIncome.getAmount());
+        assertEquals(otherDate, testIncome.getDate());
         assertEquals(IncomeCategory.ALLOWANCE, testIncome.getCategory());
     }
+
+    @Test
+    void testGetEntry() {
+        Entry otherEntry = testIncome.getEntry();
+
+        assertEquals(otherEntry, testIncome);
+    }
+
 }
 

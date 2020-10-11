@@ -52,4 +52,19 @@ public abstract class Report {
     public List<Entry> getAllEntries() {
         return entries;
     }
+
+    // EFFECTS: returns the total amount of all entries
+    public double sum() {
+        double result = 0;
+
+        for (Entry e: entries) {
+            result += e.getAmount();
+        }
+        return result;
+    }
+
+    // EFFECTS: returns true if report has no entries
+    public boolean isEmpty() {
+        return (entries.size() == 0);
+    }
 }

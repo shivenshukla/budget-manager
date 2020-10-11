@@ -92,9 +92,7 @@ public abstract class ReportTest {
     void testDeleteEntryMany() {
         assertEquals(0, testReport.size());
 
-        testReport.addEntry(entry1);
-        testReport.addEntry(entry2);
-        testReport.addEntry(entry3);
+        addAllEntries();
 
         assertEquals(3, testReport.size());
         assertTrue(testReport.contains(entry1));
@@ -123,9 +121,7 @@ public abstract class ReportTest {
         Calendar endDate = new GregorianCalendar();
         endDate.set(YEAR_1, Calendar.APRIL, DAY_1 - 1);
 
-        testReport.addEntry(entry1);
-        testReport.addEntry(entry2);
-        testReport.addEntry(entry3);
+        addAllEntries();
 
         assertEquals(3, testReport.size());
 
@@ -137,24 +133,21 @@ public abstract class ReportTest {
     @Test
     void testGetEntriesInRangeOneInRange() {
         Calendar endDate = new GregorianCalendar();
-        endDate.set(YEAR_2, Calendar.APRIL, DAY_2 - 1);
+        endDate.set(YEAR_3, Calendar.JANUARY, DAY_2);
 
-        testReport.addEntry(entry1);
-        testReport.addEntry(entry2);
-        testReport.addEntry(entry3);
+        addAllEntries();
 
         assertEquals(3, testReport.size());
 
-        List<Entry> entries = testReport.getEntriesInRange(date1, endDate);
+        List<Entry> entries = testReport.getEntriesInRange(date2, endDate);
 
         assertEquals(1, entries.size());
+        assertTrue(entries.contains(entry2));
     }
 
     @Test
     void testGetEntriesInRangeAllInRange() {
-        testReport.addEntry(entry1);
-        testReport.addEntry(entry2);
-        testReport.addEntry(entry3);
+        addAllEntries();
 
         assertEquals(3, testReport.size());
 
@@ -177,9 +170,7 @@ public abstract class ReportTest {
 
     @Test
     void testGetAllEntriesMany() {
-        testReport.addEntry(entry1);
-        testReport.addEntry(entry2);
-        testReport.addEntry(entry3);
+        addAllEntries();
 
         assertEquals(3, testReport.size());
 
@@ -189,5 +180,43 @@ public abstract class ReportTest {
         assertTrue(entries.contains(entry1));
         assertTrue(entries.contains(entry2));
         assertTrue(entries.contains(entry3));
+    }
+
+    @Test
+    void testSumEntriesEmpty() {
+        assertEquals(0, testReport.size());
+        assertEquals(0, testReport.sum());
+    }
+
+    @Test
+    void testSumEntriesMany() {
+        addAllEntries();
+
+        assertEquals(3, testReport.size());
+
+        double total = entry1.getAmount() + entry2.getAmount() + entry3.getAmount();
+        assertEquals(total, testReport.sum());
+    }
+
+    @Test
+    void testIsEmptyEmpty() {
+        assertEquals(0, testReport.size());
+        assertTrue(testReport.isEmpty());
+    }
+
+    @Test
+    void testIsEmptyMany() {
+        addAllEntries();
+
+        assertEquals(3, testReport.size());
+        assertFalse(testReport.isEmpty());
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds all entries to testReport
+    private void addAllEntries() {
+        testReport.addEntry(entry1);
+        testReport.addEntry(entry2);
+        testReport.addEntry(entry3);
     }
 }
