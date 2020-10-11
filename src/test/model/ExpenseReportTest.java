@@ -2,9 +2,6 @@ package model;
 
 import org.junit.jupiter.api.BeforeEach;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 public class ExpenseReportTest extends ReportTest{
 
     @BeforeEach

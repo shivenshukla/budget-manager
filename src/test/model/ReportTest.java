@@ -50,7 +50,7 @@ public abstract class ReportTest {
     void testAddEntryEmpty() {
         assertEquals(0, testReport.size());
 
-        testReport.addEntry(DESCRIPTION_1, 100.00, date1);
+        testReport.addEntry(entry1);
 
         assertEquals(1, testReport.size());
         assertTrue(testReport.contains(entry1));
@@ -60,12 +60,12 @@ public abstract class ReportTest {
     void testAddEntryMany() {
         assertEquals(0, testReport.size());
 
-        testReport.addEntry(DESCRIPTION_1, AMOUNT_1, date1);
-        testReport.addEntry(DESCRIPTION_2, AMOUNT_2, date2);
+        testReport.addEntry(entry1);
+        testReport.addEntry(entry2);
 
         assertEquals(2, testReport.size());
 
-        testReport.addEntry(DESCRIPTION_3, AMOUNT_3, date3);
+        testReport.addEntry(entry3);
 
         assertEquals(3, testReport.size());
         assertTrue(testReport.contains(entry1));
@@ -77,7 +77,7 @@ public abstract class ReportTest {
     void testDeleteEntryOne() {
         assertEquals(0, testReport.size());
 
-        testReport.addEntry(DESCRIPTION_1, AMOUNT_1, date1);
+        testReport.addEntry(entry1);
 
         assertEquals(1, testReport.size());
         assertTrue(testReport.contains(entry1));
@@ -92,9 +92,9 @@ public abstract class ReportTest {
     void testDeleteEntryMany() {
         assertEquals(0, testReport.size());
 
-        testReport.addEntry(DESCRIPTION_1, AMOUNT_1, date1);
-        testReport.addEntry(DESCRIPTION_2, AMOUNT_2, date2);
-        testReport.addEntry(DESCRIPTION_3, AMOUNT_3, date3);
+        testReport.addEntry(entry1);
+        testReport.addEntry(entry2);
+        testReport.addEntry(entry3);
 
         assertEquals(3, testReport.size());
         assertTrue(testReport.contains(entry1));
@@ -123,9 +123,9 @@ public abstract class ReportTest {
         Calendar endDate = new GregorianCalendar();
         endDate.set(YEAR_1, Calendar.APRIL, DAY_1 - 1);
 
-        testReport.addEntry(DESCRIPTION_1, AMOUNT_1, date1);
-        testReport.addEntry(DESCRIPTION_2, AMOUNT_2, date2);
-        testReport.addEntry(DESCRIPTION_3, AMOUNT_3, date3);
+        testReport.addEntry(entry1);
+        testReport.addEntry(entry2);
+        testReport.addEntry(entry3);
 
         assertEquals(3, testReport.size());
 
@@ -139,9 +139,9 @@ public abstract class ReportTest {
         Calendar endDate = new GregorianCalendar();
         endDate.set(YEAR_2, Calendar.APRIL, DAY_2 - 1);
 
-        testReport.addEntry(DESCRIPTION_1, AMOUNT_1, date1);
-        testReport.addEntry(DESCRIPTION_2, AMOUNT_2, date2);
-        testReport.addEntry(DESCRIPTION_3, AMOUNT_3, date3);
+        testReport.addEntry(entry1);
+        testReport.addEntry(entry2);
+        testReport.addEntry(entry3);
 
         assertEquals(3, testReport.size());
 
@@ -152,9 +152,9 @@ public abstract class ReportTest {
 
     @Test
     void testGetEntriesInRangeAllInRange() {
-        testReport.addEntry(DESCRIPTION_1, AMOUNT_1, date1);
-        testReport.addEntry(DESCRIPTION_2, AMOUNT_2, date2);
-        testReport.addEntry(DESCRIPTION_3, AMOUNT_3, date3);
+        testReport.addEntry(entry1);
+        testReport.addEntry(entry2);
+        testReport.addEntry(entry3);
 
         assertEquals(3, testReport.size());
 
@@ -177,9 +177,9 @@ public abstract class ReportTest {
 
     @Test
     void testGetAllEntriesMany() {
-        testReport.addEntry(DESCRIPTION_1, AMOUNT_1, date1);
-        testReport.addEntry(DESCRIPTION_2, AMOUNT_2, date2);
-        testReport.addEntry(DESCRIPTION_3, AMOUNT_3, date3);
+        testReport.addEntry(entry1);
+        testReport.addEntry(entry2);
+        testReport.addEntry(entry3);
 
         assertEquals(3, testReport.size());
 

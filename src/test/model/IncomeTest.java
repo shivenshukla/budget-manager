@@ -33,3 +33,4 @@ public class IncomeTest {
         assertEquals(IncomeCategory.ALLOWANCE, testIncome.getCategory());
     }
 }
+
