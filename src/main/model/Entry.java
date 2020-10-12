@@ -43,4 +43,11 @@ public abstract class Entry {
     public Calendar getDate() {
         return this.date;
     }
+
+    @Override
+    public String toString() {
+        String amountStr = String.format("$%.2f", this.amount);
+        return date.get(Calendar.YEAR) + "-" + date.get(Calendar.MONTH) + "-" +  date.get(Calendar.DAY_OF_MONTH)
+                + "\t\t" + amountStr + "\t\t" + description;
+    }
 }
