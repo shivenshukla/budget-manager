@@ -24,8 +24,8 @@ public abstract class Entry {
         this.amount = amount;
     }
 
-    public void setDate(Calendar date) {
-        this.date = date;
+    public void setDate(int year, int month, int day) {
+        this.date.set(year, month, day);
     }
 
     public Entry getEntry() {
@@ -46,8 +46,10 @@ public abstract class Entry {
 
     @Override
     public String toString() {
-        String amountStr = String.format("$%.2f", this.amount);
-        return date.get(Calendar.YEAR) + "-" + date.get(Calendar.MONTH) + "-" +  date.get(Calendar.DAY_OF_MONTH)
-                + "\t\t" + amountStr + "\t\t" + description;
+        String amountStr = String.format("%-15.2f", this.amount);
+        String yearStr = String.format("%d", this.date.get(Calendar.YEAR));
+        String monthStr = String.format("%02d", this.date.get(Calendar.MONTH));
+        String dayString = String.format("%02d", this.date.get(Calendar.DAY_OF_MONTH));
+        return yearStr + "-" + monthStr + "-" + dayString + "\t\t\t$" + amountStr + description;
     }
 }

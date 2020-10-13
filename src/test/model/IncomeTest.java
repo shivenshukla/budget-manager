@@ -14,7 +14,7 @@ public class IncomeTest {
     @BeforeEach
     void runBefore() {
         Calendar date = new GregorianCalendar();
-        date.set(2019, Calendar.JUNE, 21);
+        date.set(2019, 6, 21);
         testIncome = new Income("Paycheck from part-time job", 350.01, date);
     }
 
@@ -28,17 +28,16 @@ public class IncomeTest {
 
     @Test
     void testSetters() {
-        Calendar otherDate = new GregorianCalendar();
-        otherDate.set(2019, Calendar.JUNE, 21);
-
         testIncome.setDescription("Salary from full-time job");
         testIncome.setAmount(3500.00);
-        testIncome.setDate(otherDate);
+        testIncome.setDate(2019, 6, 21);
         testIncome.setCategory(IncomeCategory.ALLOWANCE);
 
         assertEquals("Salary from full-time job", testIncome.getDescription());
         assertEquals(3500.00, testIncome.getAmount());
-        assertEquals(otherDate, testIncome.getDate());
+        assertEquals(2019, testIncome.getDate().get(Calendar.YEAR));
+        assertEquals(6, testIncome.getDate().get(Calendar.MONTH));
+        assertEquals(21, testIncome.getDate().get(Calendar.DAY_OF_MONTH));
         assertEquals(IncomeCategory.ALLOWANCE, testIncome.getCategory());
     }
 
@@ -47,6 +46,11 @@ public class IncomeTest {
         Entry otherEntry = testIncome.getEntry();
 
         assertEquals(otherEntry, testIncome);
+    }
+
+    @Test
+    void testToString() {
+        assertEquals("2019-06-21\t\t\t$350.01         Paycheck from part-time job", testIncome.toString());
     }
 
 }

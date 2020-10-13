@@ -14,7 +14,7 @@ class ExpenseTest {
     @BeforeEach
     void runBefore() {
         Calendar date = new GregorianCalendar();
-        date.set(2020, Calendar.JANUARY, 15);
+        date.set(2020, 1, 15);
         testExpense = new Expense("Groceries purchased at supermarket", 123.45, date);
     }
 
@@ -28,17 +28,16 @@ class ExpenseTest {
 
     @Test
     void testSetters() {
-        Calendar otherDate = new GregorianCalendar();
-        otherDate.set(2019, Calendar.JUNE, 21);
-
         testExpense.setDescription("Purchased a year-long gaming subscription");
         testExpense.setAmount(69.99);
-        testExpense.setDate(otherDate);
+        testExpense.setDate(2019, 6, 21);
         testExpense.setCategory(ExpenseCategory.ENTERTAINMENT);
 
         assertEquals("Purchased a year-long gaming subscription", testExpense.getDescription());
         assertEquals(69.99, testExpense.getAmount());
-        assertEquals(otherDate, testExpense.getDate());
+        assertEquals(2019, testExpense.getDate().get(Calendar.YEAR));
+        assertEquals(6, testExpense.getDate().get(Calendar.MONTH));
+        assertEquals(21, testExpense.getDate().get(Calendar.DAY_OF_MONTH));
         assertEquals(ExpenseCategory.ENTERTAINMENT, testExpense.getCategory());
     }
 
@@ -46,5 +45,11 @@ class ExpenseTest {
     void testGetEntry() {
         Entry otherEntry = testExpense.getEntry();
         assertEquals(otherEntry, testExpense);
+    }
+
+    @Test
+    void testToString(){
+        assertEquals("2020-01-15\t\t\t$123.45         Groceries purchased at supermarket",
+                testExpense.toString());
     }
 }
