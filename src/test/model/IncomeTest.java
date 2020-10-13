@@ -23,7 +23,6 @@ public class IncomeTest {
         assertEquals("Paycheck from part-time job", testIncome.getDescription());
         assertEquals(350.01, testIncome.getAmount());
         assertEquals(2019, testIncome.getDate().getWeekYear());
-        assertEquals(IncomeCategory.UNSPECIFIED, testIncome.getCategory());
     }
 
     @Test
@@ -31,14 +30,12 @@ public class IncomeTest {
         testIncome.setDescription("Salary from full-time job");
         testIncome.setAmount(3500.00);
         testIncome.setDate(2019, 6, 21);
-        testIncome.setCategory(IncomeCategory.ALLOWANCE);
 
         assertEquals("Salary from full-time job", testIncome.getDescription());
         assertEquals(3500.00, testIncome.getAmount());
         assertEquals(2019, testIncome.getDate().get(Calendar.YEAR));
         assertEquals(6, testIncome.getDate().get(Calendar.MONTH));
         assertEquals(21, testIncome.getDate().get(Calendar.DAY_OF_MONTH));
-        assertEquals(IncomeCategory.ALLOWANCE, testIncome.getCategory());
     }
 
     @Test
