@@ -26,13 +26,13 @@ public abstract class ReportTest {
     protected static final int DAY_2 = 20;
     protected static final int DAY_3 = 7;
 
-    Report testReport;
-    Entry entry1;
-    Entry entry2;
-    Entry entry3;
-    Calendar date1;
-    Calendar date2;
-    Calendar date3;
+    protected Report testReport;
+    protected Entry entry1;
+    protected Entry entry2;
+    protected Entry entry3;
+    protected Calendar date1;
+    protected Calendar date2;
+    protected Calendar date3;
 
     @BeforeEach
     void runBefore() {
@@ -44,6 +44,11 @@ public abstract class ReportTest {
 
         date3 = new GregorianCalendar();
         date3.set(YEAR_3, Calendar.AUGUST, DAY_3);
+    }
+
+    @Test
+    void testConstructor() {
+        assertEquals(0, testReport.size());
     }
 
     @Test

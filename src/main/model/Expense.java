@@ -2,7 +2,7 @@ package model;
 
 import java.util.Calendar;
 
-// Represents an expense having a description, amount (in dollars), date of entry, and category
+// Represents an expense having a description, amount (in dollars), date of entry
 public class Expense extends Entry {
 
     // REQUIRES: description has non-zero length and amount > 0

@@ -7,7 +7,7 @@ import java.util.GregorianCalendar;
 import java.util.Scanner;
 
 // Represents the Budget application
-// The following code was created while referencing ui/TellerApp
+// This class was created while referencing the ui package of https://github.students.cs.ubc.ca/CPSC210/TellerApp
 public class BudgetApp {
     private Budget budget;
     private Scanner input;
@@ -246,6 +246,8 @@ public class BudgetApp {
 
         Income i = new Income(description, amount, date);
         budget.addIncome(i);
+
+        System.out.println();
     }
 
     // MODIFIES: this
@@ -269,6 +271,8 @@ public class BudgetApp {
 
         Expense e = new Expense(description, amount, date);
         budget.addExpense(e);
+
+        System.out.println();
     }
 
     // MODIFIES: this
@@ -294,6 +298,7 @@ public class BudgetApp {
                 System.out.println("The entry has been deleted");
             }
         }
+        System.out.println();
     }
 
     // MODIFIES: this
@@ -325,6 +330,7 @@ public class BudgetApp {
                 System.out.println("The entry has been updated");
             }
         }
+        System.out.println();
     }
 
     // EFFECTS: displays all entries in the given report

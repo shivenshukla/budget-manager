@@ -2,11 +2,12 @@ package model;
 
 import java.util.List;
 
-// Represents a budget having a expense report and income report
+// Represents a budget having an expense report and income report
 public class Budget {
     protected Report expenseReport;
     protected Report incomeReport;
 
+    // EFFECTS: Constructs a budget with an empty expense report and an empty income report
     public Budget() {
         expenseReport = new ExpenseReport();
         incomeReport = new IncomeReport();

@@ -2,7 +2,8 @@ package model;
 
 import java.util.Calendar;
 
-// Represents an entry having a description, amount (in dollars), and date of entry
+// Represents an entry for a report having a description, amount (in dollars), and date of entry
+// Calendar object referenced from https://docs.oracle.com/javase/7/docs/api/java/util/Calendar.html
 public abstract class Entry {
     protected String description;
     protected double amount;

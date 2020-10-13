@@ -9,8 +9,6 @@ import java.util.GregorianCalendar;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BudgetTest {
-    Budget testBudget;
-
     // constants used to construct entries
     protected static final String DESCRIPTION_1 = "Entry 1";
     protected static final String DESCRIPTION_2 = "Entry 2";
@@ -23,10 +21,11 @@ public class BudgetTest {
     protected static final int DAY_1 = 3;
     protected static final int DAY_2 = 19;
 
-    Expense expense1;
-    Income income1;
-    Calendar date1;
-    Calendar date2;
+    protected Budget testBudget;
+    protected Expense testExpense;
+    protected Income testIncome;
+    protected Calendar date1;
+    protected Calendar date2;
 
     @BeforeEach
     void runBefore() {
@@ -40,56 +39,98 @@ public class BudgetTest {
     }
 
     @Test
-    void testIsSurplus() {
-        expense1 = new Expense(DESCRIPTION_2, AMOUNT_2, date2);
-        income1 = new Income(DESCRIPTION_1, AMOUNT_1, date1);
+    void testConstructor() {
+        Report expenseReport = testBudget.getExpenseReport();
+        Report incomeReport = testBudget.getIncomeReport();
 
-        testBudget.addExpense(expense1);
-        testBudget.addIncome(income1);
+        assertEquals(0, expenseReport.size());
+        assertEquals(0, incomeReport.size());
+    }
+
+    @Test
+    void testAddExpense() {
+        testExpense = new Expense(DESCRIPTION_2, AMOUNT_2, date2);
+
+        Report otherExpenseReport = testBudget.getExpenseReport();
+        Report otherIncomeReport = testBudget.getIncomeReport();
+
+        assertEquals(0, otherExpenseReport.size());
+        assertEquals(0, otherIncomeReport.size());
+
+        testBudget.addExpense(testExpense);
+
+        assertEquals(1, otherExpenseReport.size());
+        assertEquals(0, otherIncomeReport.size());
+
+        assertTrue(otherExpenseReport.contains(testExpense));
+        assertFalse(otherIncomeReport.contains(testExpense));
+    }
+
+    @Test
+    void testAddIncome() {
+        testIncome = new Income(DESCRIPTION_1, AMOUNT_1, date1);
+
+        Report otherExpenseReport = testBudget.getExpenseReport();
+        Report otherIncomeReport = testBudget.getIncomeReport();
+
+        assertEquals(0, otherExpenseReport.size());
+        assertEquals(0, otherIncomeReport.size());
+
+        testBudget.addIncome(testIncome);
+
+        assertEquals(0, otherExpenseReport.size());
+        assertEquals(1, otherIncomeReport.size());
+
+        assertFalse(otherExpenseReport.contains(testIncome));
+        assertTrue(otherIncomeReport.contains(testIncome));
+    }
+
+    @Test
+    void testIsSurplus() {
+        testExpense = new Expense(DESCRIPTION_2, AMOUNT_2, date2);
+        testIncome = new Income(DESCRIPTION_1, AMOUNT_1, date1);
+
+        addEntries(testExpense, testIncome);
 
         assertTrue(testBudget.isSurplus());
     }
 
     @Test
     void testIsSurplusZeroCase() {
-        expense1 = new Expense(DESCRIPTION_1, AMOUNT_1, date2);
-        income1 = new Income(DESCRIPTION_2, AMOUNT_1, date1);
+        testExpense = new Expense(DESCRIPTION_1, AMOUNT_1, date2);
+        testIncome = new Income(DESCRIPTION_2, AMOUNT_1, date1);
 
-        testBudget.addExpense(expense1);
-        testBudget.addIncome(income1);
+        addEntries(testExpense, testIncome);
 
         assertFalse(testBudget.isSurplus());
     }
 
     @Test
     void testIsDeficit() {
-        expense1 = new Expense(DESCRIPTION_1, AMOUNT_1, date1);
-        income1 = new Income(DESCRIPTION_2, AMOUNT_2, date2);
+        testExpense = new Expense(DESCRIPTION_1, AMOUNT_1, date1);
+        testIncome = new Income(DESCRIPTION_2, AMOUNT_2, date2);
 
-        testBudget.addExpense(expense1);
-        testBudget.addIncome(income1);
+        addEntries(testExpense, testIncome);
 
         assertTrue(testBudget.isDeficit());
     }
 
     @Test
     void testIsDeficitZeroCase() {
-        expense1 = new Expense(DESCRIPTION_1, AMOUNT_1, date2);
-        income1 = new Income(DESCRIPTION_2, AMOUNT_1, date1);
+        testExpense = new Expense(DESCRIPTION_1, AMOUNT_1, date2);
+        testIncome = new Income(DESCRIPTION_2, AMOUNT_1, date1);
 
-        testBudget.addExpense(expense1);
-        testBudget.addIncome(income1);
+        addEntries(testExpense, testIncome);
 
         assertFalse(testBudget.isDeficit());
     }
 
     @Test
     void testGetters() {
-        expense1 = new Expense(DESCRIPTION_2, AMOUNT_2, date2);
-        income1 = new Income(DESCRIPTION_1, AMOUNT_1, date1);
+        testExpense = new Expense(DESCRIPTION_2, AMOUNT_2, date2);
+        testIncome = new Income(DESCRIPTION_1, AMOUNT_1, date1);
 
-        testBudget.addExpense(expense1);
-        testBudget.addIncome(income1);
+        addEntries(testExpense, testIncome);
 
         Report otherExpenseReport = testBudget.getExpenseReport();
         Report otherIncomeReport = testBudget.getIncomeReport();
@@ -97,7 +138,14 @@ public class BudgetTest {
         assertEquals(1, otherExpenseReport.size());
         assertEquals(1, otherIncomeReport.size());
 
-        assertTrue(otherExpenseReport.contains(expense1));
-        assertTrue(otherIncomeReport.contains(income1));
+        assertTrue(otherExpenseReport.contains(testExpense));
+        assertTrue(otherIncomeReport.contains(testIncome));
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds expense e and income i to the budget
+    void addEntries(Expense e, Income i) {
+        testBudget.addExpense(e);
+        testBudget.addIncome(i);
     }
 }

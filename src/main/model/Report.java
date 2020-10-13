@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-// Represents a report of entries
+// Represents a report which is a list of entries
 public abstract class Report {
     List<Entry> entries;
 
