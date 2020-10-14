@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class BudgetApp {
     private Budget budget;
     private Scanner input;
+    private Scanner inputSentence;
     private Report expenseReport;
     private Report incomeReport;
 
@@ -59,7 +60,7 @@ public class BudgetApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: processes user command for submenu
+    // EFFECTS: processes user command for the expense report submenu
     private void processSubCommandExpenseReport(String command) {
         if (command.equals("a")) {
             addExpense();
@@ -73,7 +74,7 @@ public class BudgetApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: processes user command for submenu
+    // EFFECTS: processes user command for the income report submenu
     private void processSubCommandIncomeReport(String command) {
         if (command.equals("a")) {
             addIncome();
@@ -86,6 +87,7 @@ public class BudgetApp {
         }
     }
 
+    // REQUIRES: amount is of type double; year, month, and day are of type int
     // MODIFIES: this
     // EFFECTS: processes user command for modify submenu
     private void processModifyCommand(String command, Entry entry) {
@@ -93,10 +95,10 @@ public class BudgetApp {
             System.out.print("Enter the year: ");
             int year = input.nextInt();
 
-            System.out.print("Enter the month: ");
+            System.out.print("Enter the month (number): ");
             int month = input.nextInt();
 
-            System.out.print("Enter the day: ");
+            System.out.print("Enter the day (number): ");
             int day = input.nextInt();
 
             entry.setDate(year, month, day);
@@ -104,14 +106,18 @@ public class BudgetApp {
             System.out.print("Enter the amount: ");
             double amount = input.nextDouble();
 
-            entry.setAmount(amount);
+            if (amount < 0) {
+                System.out.println("The amount cannot be negative. The entry was not modified\n");
+            } else {
+                entry.setAmount(amount);
+            }
         } else if (command.equals("z")) {
             System.out.print("Enter the description: ");
-            String description = input.next();
+            String description = inputSentence.next();
 
             entry.setDescription(description);
         } else {
-            System.out.println("Uh Oh! You have entered an invalid input...");
+            System.out.println("Uh Oh! You have entered an invalid input...\n");
         }
     }
 
@@ -120,6 +126,7 @@ public class BudgetApp {
     private void initialize() {
         budget = new Budget();
         input = new Scanner(System.in);
+        inputSentence = new Scanner(System.in).useDelimiter("\n");
         expenseReport = budget.getExpenseReport();
         incomeReport = budget.getIncomeReport();
     }
@@ -207,7 +214,7 @@ public class BudgetApp {
         System.out.println("\tq -> quit");
     }
 
-    // EFFECTS: displays sub menu of options to user
+    // EFFECTS: displays the report submenu of options to user
     private void displayReportSubmenu() {
         System.out.println("\nSelect from:");
         System.out.println("\tm -> modify an existing entry");
@@ -216,7 +223,7 @@ public class BudgetApp {
         System.out.println("\tb -> go back");
     }
 
-    // EFFECTS: displays sub menu of of options to user
+    // EFFECTS: displays the modify submenu of of options to user
     private void displayModifySubmenu() {
         System.out.println("Which field would you like to modify?");
         System.out.println("\nSelect from:");
@@ -225,63 +232,72 @@ public class BudgetApp {
         System.out.println("\tz -> description");
     }
 
+    // REQUIRES: amount is of type double; year, month, and day are of type int
     // MODIFIES: this
     // EFFECTS: adds a new income to the income report
     private void addIncome() {
+        double amount;
         System.out.print("Enter the amount: ");
-        double amount = input.nextDouble();
+        amount = input.nextDouble();
+        if (amount < 0) {
+            System.out.println("The amount cannot be negative. No new entry was added.");
+        } else {
+            System.out.print("Enter the description: ");
+            String description = inputSentence.next();
 
-        System.out.print("Enter the description: ");
-        String description = input.next();
+            System.out.print("Enter the year: ");
+            int year = input.nextInt();
+            System.out.print("Enter the month (number): ");
+            int month = input.nextInt();
+            System.out.print("Enter the day (number): ");
+            int day = input.nextInt();
 
-        System.out.print("Enter the year: ");
-        int year = input.nextInt();
-        System.out.print("Enter the month: ");
-        int month = input.nextInt();
-        System.out.print("Enter the day: ");
-        int day = input.nextInt();
+            Calendar date = new GregorianCalendar();
+            date.set(year, month, day);
 
-        Calendar date = new GregorianCalendar();
-        date.set(year, month, day);
-
-        Income i = new Income(description, amount, date);
-        budget.addIncome(i);
-
+            Income i = new Income(description, amount, date);
+            budget.addIncome(i);
+        }
         System.out.println();
     }
 
+    // REQUIRES: amount is of type double; year, month, and day are of type int
     // MODIFIES: this
     // EFFECTS: adds a new expense to the expense report
     private void addExpense() {
+        double amount;
         System.out.print("Enter the amount: ");
-        double amount = input.nextDouble();
+        amount = input.nextDouble();
+        if (amount < 0) {
+            System.out.println("The amount cannot be negative. No new entry was added.");
+        } else {
+            System.out.print("Enter the description: ");
+            String description = inputSentence.next();
 
-        System.out.print("Enter the description: ");
-        String description = input.next();
+            System.out.print("Enter the year: ");
+            int year = input.nextInt();
+            System.out.print("Enter the month (number): ");
+            int month = input.nextInt();
+            System.out.print("Enter the day (number): ");
+            int day = input.nextInt();
 
-        System.out.print("Enter the year: ");
-        int year = input.nextInt();
-        System.out.print("Enter the month: ");
-        int month = input.nextInt();
-        System.out.print("Enter the day: ");
-        int day = input.nextInt();
+            Calendar date = new GregorianCalendar();
+            date.set(year, month, day);
 
-        Calendar date = new GregorianCalendar();
-        date.set(year, month, day);
-
-        Expense e = new Expense(description, amount, date);
-        budget.addExpense(e);
-
+            Expense e = new Expense(description, amount, date);
+            budget.addExpense(e);
+        }
         System.out.println();
     }
 
+    // REQUIRES: entryNum is of type int
     // MODIFIES: this
     // EFFECTS: deletes an entry from the given report
     private void deleteEntry(Report report) {
         if (report.isEmpty()) {
             System.out.println("There are no entries to delete");
         } else {
-            System.out.println("Which entry would you like to delete? (-1 to cancel)");
+            System.out.println("Enter the number of the entry to delete; -1 to cancel");
 
             displayEntries(report);
 
@@ -301,13 +317,14 @@ public class BudgetApp {
         System.out.println();
     }
 
+    // REQUIRES: entryNum is of type int
     // MODIFIES: this
     // EFFECTS: modifies an entry from the given report
     private void modifyEntry(Report report) {
         if (report.isEmpty()) {
             System.out.println("There are no entries to modify");
         } else {
-            System.out.println("Which entry would you like to modify? (enter -1 to cancel)");
+            System.out.println("Enter the number of the entry to modify; -1 to cancel)");
 
             displayEntries(report);
 
@@ -316,7 +333,7 @@ public class BudgetApp {
             if (entryNum >= report.size()) {
                 System.out.println("There is no entry with that given number");
             } else if (entryNum < 0) {
-                System.out.println("No entry was updated");
+                System.out.println("No entry was modified");
             } else {
                 Entry entryToModify = report.getAllEntries().get(entryNum);
 
@@ -327,7 +344,7 @@ public class BudgetApp {
 
                 processModifyCommand(command, entryToModify);
 
-                System.out.println("The entry has been updated");
+                System.out.println("The entry has been modified");
             }
         }
         System.out.println();

@@ -36,7 +36,7 @@ public abstract class Report {
         return entries.contains(entry);
     }
 
-    // EFFECTS: returns all entries in the report from startDate to endDate
+    // EFFECTS: returns all entries in the report from startDate to endDate, inclusive
     public List<Entry> getEntriesInRange(Calendar startDate, Calendar endDate) {
         List<Entry> entriesInRange = new ArrayList<>();
 
