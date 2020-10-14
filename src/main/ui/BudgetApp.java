@@ -89,40 +89,6 @@ public class BudgetApp {
         }
     }
 
-    // REQUIRES: amount is of type double; year, month, and day are of type int
-    // MODIFIES: this
-    // EFFECTS: processes user command for modify submenu
-    private void processModifyCommand(String command, Entry entry) {
-        if (command.equals("e")) {
-            System.out.print("Enter the year: ");
-            int year = input.nextInt();
-
-            System.out.print("Enter the month (number): ");
-            int month = input.nextInt();
-
-            System.out.print("Enter the day (number): ");
-            int day = input.nextInt();
-
-            entry.setDate(year, month, day);
-        } else if (command.equals("a")) {
-            System.out.print("Enter the amount: ");
-            double amount = input.nextDouble();
-
-            if (amount < 0) {
-                System.out.println("The amount cannot be negative. The entry was not modified\n");
-            } else {
-                entry.setAmount(amount);
-            }
-        } else if (command.equals("d")) {
-            System.out.print("Enter the description: ");
-            String description = inputSentence.next();
-
-            entry.setDescription(description);
-        } else {
-            System.out.println("Uh Oh! You have entered an invalid input...\n");
-        }
-    }
-
     // MODIFIES: this
     // EFFECTS: initializes budget
     private void initialize() {
@@ -234,9 +200,8 @@ public class BudgetApp {
         System.out.println("\td -> description");
     }
 
-    // REQUIRES: amount is of type double; year, month, and day are of type int
     // MODIFIES: this
-    // EFFECTS: adds a new income to the incomeReport
+    // EFFECTS: adds a new income to the incomeReport, if amount >= 0
     private void addIncome() {
         double amount;
         System.out.print("Enter the amount: ");
@@ -263,9 +228,8 @@ public class BudgetApp {
         System.out.println();
     }
 
-    // REQUIRES: amount is of type double; year, month, and day are of type int
     // MODIFIES: this
-    // EFFECTS: adds a new expense to the expenseReport
+    // EFFECTS: adds a new expense to the expenseReport, if amount >= 0
     private void addExpense() {
         double amount;
         System.out.print("Enter the amount: ");
@@ -292,9 +256,8 @@ public class BudgetApp {
         System.out.println();
     }
 
-    // REQUIRES: entryNum is of type int
     // MODIFIES: this
-    // EFFECTS: deletes an entry from the given report
+    // EFFECTS: prompts user for entry to delete; deletes it, if entryNum corresponds to an entry in report
     private void deleteEntry(Report report) {
         if (report.isEmpty()) {
             System.out.println("There are no entries to delete.");
@@ -319,9 +282,8 @@ public class BudgetApp {
         System.out.println();
     }
 
-    // REQUIRES: entryNum is of type int
     // MODIFIES: this
-    // EFFECTS: modifies an entry from the given report
+    // EFFECTS: prompts user for entry to modify; modifies it, if entryNum corresponds to an entry in report
     private void modifyEntry(Report report) {
         if (report.isEmpty()) {
             System.out.println("There are no entries to modify.");
@@ -344,12 +306,45 @@ public class BudgetApp {
                 String command = input.next();
                 command.toLowerCase();
 
-                processModifyCommand(command, entryToModify);
+                doModification(command, entryToModify);
 
                 System.out.println("The entry has been modified.");
             }
         }
         System.out.println();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: processes user command and modifies the given entry
+    private void doModification(String command, Entry entry) {
+        if (command.equals("e")) {
+            System.out.print("Enter the year: ");
+            int year = input.nextInt();
+
+            System.out.print("Enter the month (number): ");
+            int month = input.nextInt();
+
+            System.out.print("Enter the day (number): ");
+            int day = input.nextInt();
+
+            entry.setDate(year, month, day);
+        } else if (command.equals("a")) {
+            System.out.print("Enter the amount: ");
+            double amount = input.nextDouble();
+
+            if (amount < 0) {
+                System.out.println("The amount cannot be negative. The entry was not modified\n");
+            } else {
+                entry.setAmount(amount);
+            }
+        } else if (command.equals("d")) {
+            System.out.print("Enter the description: ");
+            String description = inputSentence.next();
+
+            entry.setDescription(description);
+        } else {
+            System.out.println("Uh Oh! You have entered an invalid input...\n");
+        }
     }
 
     // EFFECTS: displays all entries in the given report

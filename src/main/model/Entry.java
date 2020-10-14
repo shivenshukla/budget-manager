@@ -9,7 +9,7 @@ public abstract class Entry {
     protected double amount;
     protected Calendar date;
 
-    // REQUIRES: description has non-zero length and amount > 0
+    // REQUIRES: description has non-zero length and amount >= 0
     // EFFECTS: constructs an entry with given description, amount (in dollars) and date of entry
     public Entry(String description, double amount, Calendar date) {
         this.description = description;
