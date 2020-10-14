@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
 
+import static java.lang.Math.abs;
+
 // Represents the Budget application
 // This class was created while referencing the ui package of https://github.students.cs.ubc.ca/CPSC210/TellerApp
 public class BudgetApp {
@@ -60,7 +62,7 @@ public class BudgetApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: processes user command for the expense report submenu
+    // EFFECTS: processes user command for the expenseReport submenu
     private void processSubCommandExpenseReport(String command) {
         if (command.equals("a")) {
             addExpense();
@@ -74,7 +76,7 @@ public class BudgetApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: processes user command for the income report submenu
+    // EFFECTS: processes user command for the incomeReport submenu
     private void processSubCommandIncomeReport(String command) {
         if (command.equals("a")) {
             addIncome();
@@ -91,7 +93,7 @@ public class BudgetApp {
     // MODIFIES: this
     // EFFECTS: processes user command for modify submenu
     private void processModifyCommand(String command, Entry entry) {
-        if (command.equals("d")) {
+        if (command.equals("e")) {
             System.out.print("Enter the year: ");
             int year = input.nextInt();
 
@@ -111,7 +113,7 @@ public class BudgetApp {
             } else {
                 entry.setAmount(amount);
             }
-        } else if (command.equals("z")) {
+        } else if (command.equals("d")) {
             System.out.print("Enter the description: ");
             String description = inputSentence.next();
 
@@ -131,7 +133,7 @@ public class BudgetApp {
         incomeReport = budget.getIncomeReport();
     }
 
-    // EFFECTS: displays budget report
+    // EFFECTS: displays the budget report
     private void viewBudgetReport() {
         System.out.println("Budget Report:");
 
@@ -139,20 +141,20 @@ public class BudgetApp {
         double incomeTotal = incomeReport.sum();
         double budgetTotal = budget.getDifference();
 
-        System.out.printf("\nTotal expenses: $%.2f\n", expenseTotal);
+        System.out.printf("Total expenses: $%.2f\n", expenseTotal);
         System.out.printf("Total income: $%.2f\n", incomeTotal);
 
         if (budget.isSurplus()) {
-            System.out.printf("You have a surplus of $%.2f\n", budgetTotal);
+            System.out.printf("\nYou have a surplus of $%.2f\n", budgetTotal);
         } else if (budget.isDeficit()) {
-            System.out.printf("You have a deficit of $%.2f\n", budgetTotal);
+            System.out.printf("\nYou have a deficit of $%.2f\n", abs(budgetTotal));
         } else {
             System.out.printf("\nYou have a balance of $%.2f\n", budgetTotal);
         }
     }
 
     // MODIFIES: this
-    // EFFECTS: displays expense report and processes user input
+    // EFFECTS: displays the expenseReport and processes user input
     private void viewExpenseReport() {
         boolean keepGoing = true;
         String command;
@@ -161,7 +163,7 @@ public class BudgetApp {
             System.out.println("Expense Report:");
 
             if (expenseReport.isEmpty()) {
-                System.out.println("There are no expenses to show");
+                System.out.println("There are no expenses to show.");
             } else {
                 displayEntries(expenseReport);
             }
@@ -179,7 +181,7 @@ public class BudgetApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: displays income report and processes user input
+    // EFFECTS: displays the incomeReport and processes user input
     private void viewIncomeReport() {
         boolean keepGoing = true;
         String command;
@@ -188,7 +190,7 @@ public class BudgetApp {
             System.out.println("Income report:");
 
             if (incomeReport.isEmpty()) {
-                System.out.println("There is no income to show");
+                System.out.println("There is no income to show.");
             } else {
                 displayEntries(incomeReport);
             }
@@ -205,7 +207,7 @@ public class BudgetApp {
         }
     }
 
-    // EFFECTS: displays main menu of options to user
+    // EFFECTS: displays the main menu of options to the user
     private void displayMainMenu() {
         System.out.println("\nSelect from:");
         System.out.println("\tb -> view budget report");
@@ -214,27 +216,27 @@ public class BudgetApp {
         System.out.println("\tq -> quit");
     }
 
-    // EFFECTS: displays the report submenu of options to user
+    // EFFECTS: displays the report submenu of options to the user
     private void displayReportSubmenu() {
         System.out.println("\nSelect from:");
-        System.out.println("\tm -> modify an existing entry");
         System.out.println("\ta -> add a new entry");
+        System.out.println("\tm -> modify an existing entry");
         System.out.println("\td -> delete an existing entry");
         System.out.println("\tb -> go back");
     }
 
-    // EFFECTS: displays the modify submenu of of options to user
+    // EFFECTS: displays the modify submenu of of options to the user
     private void displayModifySubmenu() {
         System.out.println("Which field would you like to modify?");
         System.out.println("\nSelect from:");
-        System.out.println("\td -> date of entry");
+        System.out.println("\te -> date of entry");
         System.out.println("\ta -> amount");
-        System.out.println("\tz -> description");
+        System.out.println("\td -> description");
     }
 
     // REQUIRES: amount is of type double; year, month, and day are of type int
     // MODIFIES: this
-    // EFFECTS: adds a new income to the income report
+    // EFFECTS: adds a new income to the incomeReport
     private void addIncome() {
         double amount;
         System.out.print("Enter the amount: ");
@@ -263,7 +265,7 @@ public class BudgetApp {
 
     // REQUIRES: amount is of type double; year, month, and day are of type int
     // MODIFIES: this
-    // EFFECTS: adds a new expense to the expense report
+    // EFFECTS: adds a new expense to the expenseReport
     private void addExpense() {
         double amount;
         System.out.print("Enter the amount: ");
@@ -295,23 +297,23 @@ public class BudgetApp {
     // EFFECTS: deletes an entry from the given report
     private void deleteEntry(Report report) {
         if (report.isEmpty()) {
-            System.out.println("There are no entries to delete");
+            System.out.println("There are no entries to delete.");
         } else {
-            System.out.println("Enter the number of the entry to delete; -1 to cancel");
+            System.out.println("Enter the number of the entry to delete; -1 to cancel.");
 
             displayEntries(report);
 
             int entryNum = input.nextInt();
 
             if (entryNum >= report.size()) {
-                System.out.println("There is no entry with the given number");
+                System.out.println("There is no entry with the given number.");
             } else if (entryNum < 0) {
-                System.out.println("No entry was deleted");
+                System.out.println("No entry was deleted.");
             } else {
                 Entry entryToDelete = report.getAllEntries().get(entryNum);
                 report.deleteEntry(entryToDelete);
 
-                System.out.println("The entry has been deleted");
+                System.out.println("The entry has been deleted.");
             }
         }
         System.out.println();
@@ -322,18 +324,18 @@ public class BudgetApp {
     // EFFECTS: modifies an entry from the given report
     private void modifyEntry(Report report) {
         if (report.isEmpty()) {
-            System.out.println("There are no entries to modify");
+            System.out.println("There are no entries to modify.");
         } else {
-            System.out.println("Enter the number of the entry to modify; -1 to cancel)");
+            System.out.println("Enter the number of the entry to modify; -1 to cancel.");
 
             displayEntries(report);
 
             int entryNum = input.nextInt();
 
             if (entryNum >= report.size()) {
-                System.out.println("There is no entry with that given number");
+                System.out.println("There is no entry with the given number.");
             } else if (entryNum < 0) {
-                System.out.println("No entry was modified");
+                System.out.println("No entry was modified.");
             } else {
                 Entry entryToModify = report.getAllEntries().get(entryNum);
 
@@ -344,7 +346,7 @@ public class BudgetApp {
 
                 processModifyCommand(command, entryToModify);
 
-                System.out.println("The entry has been modified");
+                System.out.println("The entry has been modified.");
             }
         }
         System.out.println();

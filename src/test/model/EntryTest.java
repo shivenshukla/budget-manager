@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+// Tests for the Entry class
 public abstract class EntryTest {
     protected static final String DESCRIPTION = "Entry";
     protected static final double AMOUNT = 123.45;

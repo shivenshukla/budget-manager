@@ -8,30 +8,30 @@ import java.util.List;
 public abstract class Report {
     List<Entry> entries;
 
-    // EFFECTS: constructs an empty report
+    // EFFECTS: constructs an empty Report
     public Report() {
         entries = new ArrayList<>();
     }
 
     // MODIFIES: this
-    // EFFECTS: adds an entry to the report
+    // EFFECTS: adds an entry to the Report
     public void addEntry(Entry e) {
         entries.add(e);
     }
 
-    // REQUIRES: entry exists in the report
+    // REQUIRES: entry exists in the Report
     // MODIFIES: this
-    // EFFECTS: removes entry from the report
+    // EFFECTS: removes entry from the Report
     public void deleteEntry(Entry e) {
         entries.remove(e);
     }
 
-    // EFFECTS: returns the number of entries in the report
+    // EFFECTS: returns the number of entries in the Report
     public int size() {
         return entries.size();
     }
 
-    // EFFECTS: returns true if entry exists in the report; false otherwise
+    // EFFECTS: returns true if entry exists in the Report; false otherwise
     public boolean contains(Entry entry) {
         return entries.contains(entry);
     }
@@ -48,7 +48,7 @@ public abstract class Report {
         return entriesInRange;
     }
 
-    // EFFECTS: returns all entries in the report
+    // EFFECTS: returns all entries in the Report
     public List<Entry> getAllEntries() {
         return entries;
     }
@@ -63,7 +63,7 @@ public abstract class Report {
         return result;
     }
 
-    // EFFECTS: returns true if report has no entries
+    // EFFECTS: returns true if the Report has no entries
     public boolean isEmpty() {
         return (entries.size() == 0);
     }

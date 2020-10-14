@@ -2,6 +2,7 @@ package model;
 
 import org.junit.jupiter.api.BeforeEach;
 
+// Tests for the ExpenseReport class
 public class ExpenseReportTest extends ReportTest{
 
     @BeforeEach

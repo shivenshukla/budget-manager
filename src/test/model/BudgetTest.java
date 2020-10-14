@@ -8,13 +8,13 @@ import java.util.GregorianCalendar;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// Tests for the budget class
 public class BudgetTest {
     // constants used to construct entries
     protected static final String DESCRIPTION_1 = "Entry 1";
     protected static final String DESCRIPTION_2 = "Entry 2";
     protected static final double AMOUNT_1 = 100.00;
     protected static final double AMOUNT_2 = 65.58;
-
     //constants used to construct dates
     protected static final int YEAR_1 = 2008;
     protected static final int YEAR_2 = 2008;
@@ -143,7 +143,7 @@ public class BudgetTest {
     }
 
     // MODIFIES: this
-    // EFFECTS: adds expense e and income i to the budget
+    // EFFECTS: adds expense e and income i to the testBudget
     void addEntries(Expense e, Income i) {
         testBudget.addExpense(e);
         testBudget.addIncome(i);

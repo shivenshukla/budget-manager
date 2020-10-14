@@ -10,7 +10,7 @@ public abstract class Entry {
     protected Calendar date;
 
     // REQUIRES: description has non-zero length and amount > 0
-    // EFFECTS: constructs an entry with given description, amount, date of entry;
+    // EFFECTS: constructs an entry with given description, amount (in dollars) and date of entry
     public Entry(String description, double amount, Calendar date) {
         this.description = description;
         this.amount = amount;
@@ -45,6 +45,7 @@ public abstract class Entry {
         return this.date;
     }
 
+    // Returns a string representation of entry
     @Override
     public String toString() {
         String amountStr = String.format("%-15.2f", this.amount);

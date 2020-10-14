@@ -9,6 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// Tests for the Report class
 public abstract class ReportTest {
     // constants used to construct entries
     protected static final String DESCRIPTION_1 = "Entry 1";
@@ -17,7 +18,6 @@ public abstract class ReportTest {
     protected static final double AMOUNT_1 = 100.00;
     protected static final double AMOUNT_2 = 65.00;
     protected static final double AMOUNT_3 = 134.00;
-
     //constants used to construct dates
     protected static final int YEAR_1 = 2004;
     protected static final int YEAR_2 = 2008;
@@ -218,7 +218,7 @@ public abstract class ReportTest {
     }
 
     // MODIFIES: this
-    // EFFECTS: adds all entries to testReport
+    // EFFECTS: adds all entries to the testReport
     private void addAllEntries() {
         testReport.addEntry(entry1);
         testReport.addEntry(entry2);

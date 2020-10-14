@@ -7,43 +7,41 @@ public class Budget {
     protected Report expenseReport;
     protected Report incomeReport;
 
-    // EFFECTS: Constructs a budget with an empty expense report and an empty income report
+    // EFFECTS: Constructs a budget with an empty expenseReport and an empty incomeReport
     public Budget() {
         expenseReport = new ExpenseReport();
         incomeReport = new IncomeReport();
     }
 
-    // EFFECTS: adds an expense to the expense report
+    // EFFECTS: adds an expense to the expenseReport
     public void addExpense(Expense e) {
         expenseReport.addEntry(e);
     }
 
-    // EFFECTS: adds an income the income report
+    // EFFECTS: adds an income to the incomeReport
     public void addIncome(Income i) {
         incomeReport.addEntry(i);
     }
 
-    // EFFECTS: returns the difference in entry amounts between the income report and the expense report
+    // EFFECTS: returns the difference in the total dollar amount between incomeReport and expenseReport
     public double getDifference() {
         return incomeReport.sum() - expenseReport.sum();
     }
 
-    // EFFECTS: returns true if total amount of budget is > 0; false otherwise
+    // EFFECTS: returns true if total dollar amount of budget is > 0; false otherwise
     public boolean isSurplus() {
         return (getDifference() > 0);
     }
 
-    // EFFECTS: returns true if total amount of budget is < 0; false otherwise
+    // EFFECTS: returns true if total dollar amount of budget is < 0; false otherwise
     public boolean isDeficit() {
         return (getDifference() < 0);
     }
 
-    // EFFECTS: returns the income report
     public Report getIncomeReport() {
         return this.incomeReport;
     }
 
-    // EFFECTS: returns the expense report
     public Report getExpenseReport() {
         return this.expenseReport;
     }

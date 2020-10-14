@@ -13,4 +13,5 @@ daily basis to manage my own finances.
 - As a user, I want to be able to add an expense/income to my budget  
 - As a user, I want to be able to delete an expense/income from my budget
 - As a user, I want to be able to view a list of the expenses/incomes in my budget
-- As a user, I want to be able to select an expense/income and modify it 
+- As a user, I want to be able to select an expense/income and modify it
+- As a user, I want to be view the total amount of expenses/income in my budget 
