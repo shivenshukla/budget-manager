@@ -14,4 +14,6 @@ one I can see myself using on a daily basis to manage my own finances.
 - As a user, I want to be able to delete an expense/income from my budget
 - As a user, I want to be able to modify an expense/income in my budget
 - As a user, I want to be able to view a list of the expenses/incomes in my budget
-- As a user, I want to be view the total dollar amount of expense/income in my budget 
+- As a user, I want to be able to view the total dollar amount of expense/income in my budget
+- As a user, I want to be able to save my budget to file
+- As a user, I want to be able to load my budget from file
