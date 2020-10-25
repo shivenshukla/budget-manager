@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// Tests for the JsonWriter class
 // I modeled this code on the JsonWriterTest class from https://github.com/stleary/JSON-java
 public class JsonWriterTest extends JsonTest {
     private Budget testBudget;
@@ -166,6 +167,7 @@ public class JsonWriterTest extends JsonTest {
         testBudget.addIncome(income3);
     }
 
+    // REQUIRES: expenseReport has at least 3 entries
     // EFFECTS: checks whether expenses were read correctly
     private void checkExpenses(Report expenseReport) {
         List<Entry> expenses = expenseReport.getAllEntries();
@@ -175,6 +177,7 @@ public class JsonWriterTest extends JsonTest {
         checkEntry(expenses.get(2), "test expense 3", 1.50, 2008, 5, 30);
     }
 
+    // REQUIRES: incomeReport has at least 3 entries
     // EFFECTS: checks whether incomes were read correctly
     private void checkIncomes(Report incomeReport) {
         List<Entry> incomes = incomeReport.getAllEntries();

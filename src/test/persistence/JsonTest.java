@@ -6,6 +6,8 @@ import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+// Helper methods for JsonReaderTest and JsonWriterTest
+// I modeled this code on the JsonTest class from https://github.com/stleary/JSON-java
 public class JsonTest {
 
     // REQUIRES: description has non-zero length and amount >= 0
