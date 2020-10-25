@@ -1,7 +1,11 @@
 package ui;
 
 import model.*;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
@@ -9,13 +13,17 @@ import java.util.Scanner;
 import static java.lang.Math.abs;
 
 // Represents the Budget application
-// This class was created while referencing the ui package of https://github.students.cs.ubc.ca/CPSC210/TellerApp
+// I modeled this code on the ui package of https://github.students.cs.ubc.ca/CPSC210/TellerApp;
+// Methods saveBudget and loadBudget were modeled on the ui package class from https://github.com/stleary/JSON-java
 public class BudgetApp {
+    private static final String BUDGET_DATA = "./data/budget.json";
     private Budget budget;
     private Scanner input;
     private Scanner inputSentence;
     private Report expenseReport;
     private Report incomeReport;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
 
     // EFFECTS: runs the budget application
     public BudgetApp() {
@@ -56,6 +64,10 @@ public class BudgetApp {
             viewExpenseReport();
         } else if (command.equals("i")) {
             viewIncomeReport();
+        } else if (command.equals("s")) {
+            saveBudget();
+        } else if (command.equals("l")) {
+            loadBudget();
         } else {
             System.out.println("Uh Oh! You have entered an invalid input...");
         }
@@ -97,6 +109,8 @@ public class BudgetApp {
         inputSentence = new Scanner(System.in).useDelimiter("\n");
         expenseReport = budget.getExpenseReport();
         incomeReport = budget.getIncomeReport();
+        jsonWriter = new JsonWriter(BUDGET_DATA);
+        jsonReader = new JsonReader(BUDGET_DATA);
     }
 
     // EFFECTS: displays the budget report
@@ -179,6 +193,8 @@ public class BudgetApp {
         System.out.println("\tb -> view budget report");
         System.out.println("\te -> view expense report");
         System.out.println("\ti -> view income report");
+        System.out.println("\ts -> save budget to file");
+        System.out.println("\tl -> load budget from file");
         System.out.println("\tq -> quit");
     }
 
@@ -215,12 +231,11 @@ public class BudgetApp {
             System.out.print("Enter the year: ");
             int year = input.nextInt();
             System.out.print("Enter the month (number): ");
-            int month = input.nextInt();
+            int month = input.nextInt() - 1;
             System.out.print("Enter the day (number): ");
             int day = input.nextInt();
 
-            Calendar date = new GregorianCalendar();
-            date.set(year, month, day);
+            Calendar date = new GregorianCalendar(year, month, day);
 
             Income i = new Income(description, amount, date);
             budget.addIncome(i);
@@ -243,12 +258,11 @@ public class BudgetApp {
             System.out.print("Enter the year: ");
             int year = input.nextInt();
             System.out.print("Enter the month (number): ");
-            int month = input.nextInt();
+            int month = input.nextInt() - 1;
             System.out.print("Enter the day (number): ");
             int day = input.nextInt();
 
-            Calendar date = new GregorianCalendar();
-            date.set(year, month, day);
+            Calendar date = new GregorianCalendar(year, month, day);
 
             Expense e = new Expense(description, amount, date);
             budget.addExpense(e);
@@ -322,7 +336,7 @@ public class BudgetApp {
             int year = input.nextInt();
 
             System.out.print("Enter the month (number): ");
-            int month = input.nextInt();
+            int month = input.nextInt() - 1;
 
             System.out.print("Enter the day (number): ");
             int day = input.nextInt();
@@ -355,5 +369,32 @@ public class BudgetApp {
             System.out.printf("%-12d\t\t" + e + "\n", i);
             i++;
         }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: saves
+    private void saveBudget() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(budget);
+            jsonWriter.close();
+            System.out.println("Budget successfully saved to " + BUDGET_DATA);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to save budget to " + BUDGET_DATA);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: saves
+    private void loadBudget() {
+        try {
+            budget = jsonReader.read();
+            expenseReport = budget.getExpenseReport();
+            incomeReport = budget.getIncomeReport();
+            System.out.println("Budget successfully loaded from " + BUDGET_DATA);
+        } catch (IOException e) {
+            System.out.println("Unable to load budget from " + BUDGET_DATA);
+        }
+
     }
 }

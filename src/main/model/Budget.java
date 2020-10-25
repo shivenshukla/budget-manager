@@ -39,6 +39,7 @@ public class Budget implements Writable {
         return (getDifference() < 0);
     }
 
+    // Getters
     public Report getIncomeReport() {
         return this.incomeReport;
     }

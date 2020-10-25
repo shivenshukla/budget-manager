@@ -3,10 +3,12 @@ package model;
 import org.json.JSONObject;
 import persistence.Writable;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 // Represents an entry for a report having a description, amount (in dollars), and date of entry
-// Calendar object referenced from https://docs.oracle.com/javase/7/docs/api/java/util/Calendar.html
+// Documentation for Calendar: https://docs.oracle.com/javase/7/docs/api/java/util/Calendar.html
+// Documentation for SimpleDateFormat: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
 public abstract class Entry implements Writable {
     protected String description;
     protected double amount;
@@ -20,6 +22,7 @@ public abstract class Entry implements Writable {
         this.date = date;
     }
 
+    // Setters
     public void setDescription(String description) {
         this.description = description;
     }
@@ -32,6 +35,7 @@ public abstract class Entry implements Writable {
         this.date.set(year, month, day);
     }
 
+    // Getters
     public Entry getEntry() {
         return this;
     }
@@ -51,11 +55,10 @@ public abstract class Entry implements Writable {
     // EFFECTS: Returns a string representation of entry
     @Override
     public String toString() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd yyyy");
         String amountStr = String.format("%-15.2f", this.amount);
-        String yearStr = String.format("%d", this.date.get(Calendar.YEAR));
-        String monthStr = String.format("%02d", this.date.get(Calendar.MONTH));
-        String dayString = String.format("%02d", this.date.get(Calendar.DAY_OF_MONTH));
-        return yearStr + "-" + monthStr + "-" + dayString + "\t\t\t$" + amountStr + description;
+        String dateStr = simpleDateFormat.format(this.date.getTime());
+        return dateStr + "\t\t\t$" + amountStr + description;
     }
 
     // EFFECTS: Returns entry as a JSON object

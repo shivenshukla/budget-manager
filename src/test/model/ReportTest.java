@@ -36,14 +36,9 @@ public abstract class ReportTest {
 
     @BeforeEach
     void runBefore() {
-        date1 = new GregorianCalendar();
-        date1.set(YEAR_1, Calendar.APRIL, DAY_1);
-
-        date2 = new GregorianCalendar();
-        date2.set(YEAR_2, Calendar.NOVEMBER, DAY_2);
-
-        date3 = new GregorianCalendar();
-        date3.set(YEAR_3, Calendar.AUGUST, DAY_3);
+        date1 = new GregorianCalendar(YEAR_1, Calendar.APRIL, DAY_1);
+        date2 = new GregorianCalendar(YEAR_2, Calendar.NOVEMBER, DAY_2);
+        date3 = new GregorianCalendar(YEAR_3, Calendar.AUGUST, DAY_3);
     }
 
     @Test
@@ -120,11 +115,8 @@ public abstract class ReportTest {
 
     @Test
     void testGetEntriesInRangeNoneInRange() {
-        Calendar startDate = new GregorianCalendar();
-        startDate.set(YEAR_1 - 1, Calendar.DECEMBER, DAY_1);
-
-        Calendar endDate = new GregorianCalendar();
-        endDate.set(YEAR_1, Calendar.APRIL, DAY_1 - 1);
+        Calendar startDate = new GregorianCalendar(YEAR_1 - 1, Calendar.DECEMBER, DAY_1);
+        Calendar endDate = new GregorianCalendar(YEAR_1, Calendar.APRIL, DAY_1 - 1);
 
         addAllEntries();
 
@@ -137,8 +129,7 @@ public abstract class ReportTest {
 
     @Test
     void testGetEntriesInRangeOneInRange() {
-        Calendar endDate = new GregorianCalendar();
-        endDate.set(YEAR_3, Calendar.JANUARY, DAY_2);
+        Calendar endDate = new GregorianCalendar(YEAR_3, Calendar.JANUARY, DAY_2);
 
         addAllEntries();
 

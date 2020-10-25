@@ -83,14 +83,9 @@ public class JsonWriterTest extends JsonTest {
     // MODIFIES: this
     // EFFECTS: adds expenses to testBudget
     private void addExpenses() {
-        Calendar date1 = new GregorianCalendar();
-        date1.set(2020, 10, 25);
-
-        Calendar date2 = new GregorianCalendar();
-        date2.set(1995, 2, 14);
-
-        Calendar date3 = new GregorianCalendar();
-        date3.set(2008, 5, 30);
+        Calendar date1 = new GregorianCalendar(2020, 10, 25);
+        Calendar date2 = new GregorianCalendar(1995, 2, 14);
+        Calendar date3 = new GregorianCalendar(2008, 5, 30);
 
         Expense expense1 = new Expense("test expense 1", 100, date1);
         Expense expense2 = new Expense("test expense 2", 1234.56, date2);
@@ -104,14 +99,9 @@ public class JsonWriterTest extends JsonTest {
     // MODIFIES: this
     // EFFECTS: adds incomes to testBudget
     private void addIncomes() {
-        Calendar date1 = new GregorianCalendar();
-        date1.set(2019, 8, 29);
-
-        Calendar date2 = new GregorianCalendar();
-        date2.set(2020, 2, 1);
-
-        Calendar date3 = new GregorianCalendar();
-        date3.set(2001, 10, 20);
+        Calendar date1 = new GregorianCalendar(2019, 8, 29);
+        Calendar date2 = new GregorianCalendar(2020, 2, 1);
+        Calendar date3 = new GregorianCalendar(2001, 10, 20);
 
         Income income1 = new Income("test income 1", 14100, date1);
         Income income2 = new Income("test income 2", 2000.00, date2);

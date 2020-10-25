@@ -30,12 +30,8 @@ public class BudgetTest {
     @BeforeEach
     void runBefore() {
         testBudget = new Budget();
-
-        date1 = new GregorianCalendar();
-        date1.set(YEAR_1, Calendar.APRIL, DAY_1);
-
-        date2 = new GregorianCalendar();
-        date2.set(YEAR_2, Calendar.APRIL, DAY_2);
+        date1 = new GregorianCalendar(YEAR_1, Calendar.APRIL, DAY_1);
+        date2 = new GregorianCalendar(YEAR_2, Calendar.APRIL, DAY_2);
     }
 
     @Test

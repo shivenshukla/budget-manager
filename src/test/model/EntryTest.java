@@ -18,8 +18,7 @@ public abstract class EntryTest {
 
     @BeforeEach
     void runBefore() {
-        date = new GregorianCalendar();
-        date.set(2020, 1, 15);
+        date = new GregorianCalendar(2020, 1, 15);
     }
 
     @Test
