@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class JsonWriterTest extends JsonTest {
     private Budget testBudget;
     private JsonWriter writer;
+    private JsonReader reader;
 
     @BeforeEach
     void runBefore() {
@@ -41,10 +42,62 @@ public class JsonWriterTest extends JsonTest {
             writer.write(testBudget);
             writer.close();
 
-            JsonReader reader = new JsonReader("./data/testWriterEmptyBudget.json");
+            reader = new JsonReader("./data/testWriterEmptyBudget.json");
             testBudget = reader.read();
             assertTrue(testBudget.getExpenseReport().isEmpty());
             assertTrue(testBudget.getIncomeReport().isEmpty());
+        } catch (FileNotFoundException e) {
+            fail("FileNotFoundException should not have been thrown");
+        } catch (IOException e) {
+            fail("IOException should not have been thrown");
+        }
+    }
+
+    @Test
+    void testWriterExpenseEmptyIncomeMany() {
+        try {
+            addIncomes();
+
+            writer = new JsonWriter("./data/testWriterExpenseEmptyIncomeMany.json");
+            writer.open();
+            writer.write(testBudget);
+            writer.close();
+
+            reader = new JsonReader("./data/testWriterExpenseEmptyIncomeMany.json");
+            testBudget = reader.read();
+
+            Report expenseReport = testBudget.getExpenseReport();
+            Report incomeReport = testBudget.getIncomeReport();
+
+            assertTrue(expenseReport.isEmpty());
+            assertEquals(3, incomeReport.size());
+            checkIncomes(incomeReport);
+        } catch (FileNotFoundException e) {
+            fail("FileNotFoundException should not have been thrown");
+        } catch (IOException e) {
+            fail("IOException should not have been thrown");
+        }
+    }
+
+    @Test
+    void testWriterExpenseManyIncomeEmpty() {
+        writer = new JsonWriter("./data/testWriterExpenseManyIncomeEmpty.json");
+        try {
+            addExpenses();
+
+            writer.open();
+            writer.write(testBudget);
+            writer.close();
+
+            reader = new JsonReader("./data/testWriterExpenseManyIncomeEmpty.json");
+            reader.read();
+
+            Report expenseReport = testBudget.getExpenseReport();
+            Report incomeReport = testBudget.getIncomeReport();
+
+            assertTrue(incomeReport.isEmpty());
+            assertEquals(3, expenseReport.size());
+            checkExpenses(expenseReport);
         } catch (FileNotFoundException e) {
             fail("FileNotFoundException should not have been thrown");
         } catch (IOException e) {
@@ -57,12 +110,13 @@ public class JsonWriterTest extends JsonTest {
         try {
             addExpenses();
             addIncomes();
+
             writer = new JsonWriter("./data/testWriterGeneralBudget.json");
             writer.open();
             writer.write(testBudget);
             writer.close();
 
-            JsonReader reader = new JsonReader("./data/testWriterGeneralBudget.json");
+            reader = new JsonReader("./data/testWriterGeneralBudget.json");
             testBudget = reader.read();
 
             Report expenseReport = testBudget.getExpenseReport();
@@ -83,9 +137,9 @@ public class JsonWriterTest extends JsonTest {
     // MODIFIES: this
     // EFFECTS: adds expenses to testBudget
     private void addExpenses() {
-        Calendar date1 = new GregorianCalendar(2020, 10, 25);
-        Calendar date2 = new GregorianCalendar(1995, 2, 14);
-        Calendar date3 = new GregorianCalendar(2008, 5, 30);
+        Calendar date1 = new GregorianCalendar(2020, Calendar.NOVEMBER, 25);
+        Calendar date2 = new GregorianCalendar(1995, Calendar.MARCH, 14);
+        Calendar date3 = new GregorianCalendar(2008, Calendar.JUNE, 30);
 
         Expense expense1 = new Expense("test expense 1", 100, date1);
         Expense expense2 = new Expense("test expense 2", 1234.56, date2);
@@ -99,9 +153,9 @@ public class JsonWriterTest extends JsonTest {
     // MODIFIES: this
     // EFFECTS: adds incomes to testBudget
     private void addIncomes() {
-        Calendar date1 = new GregorianCalendar(2019, 8, 29);
-        Calendar date2 = new GregorianCalendar(2020, 2, 1);
-        Calendar date3 = new GregorianCalendar(2001, 10, 20);
+        Calendar date1 = new GregorianCalendar(2019, Calendar.SEPTEMBER, 29);
+        Calendar date2 = new GregorianCalendar(2020, Calendar.MARCH, 1);
+        Calendar date3 = new GregorianCalendar(2001, Calendar.NOVEMBER, 20);
 
         Income income1 = new Income("test income 1", 14100, date1);
         Income income2 = new Income("test income 2", 2000.00, date2);
@@ -112,6 +166,7 @@ public class JsonWriterTest extends JsonTest {
         testBudget.addIncome(income3);
     }
 
+    // EFFECTS: checks whether expenses were read correctly
     private void checkExpenses(Report expenseReport) {
         List<Entry> expenses = expenseReport.getAllEntries();
 
@@ -120,6 +175,7 @@ public class JsonWriterTest extends JsonTest {
         checkEntry(expenses.get(2), "test expense 3", 1.50, 2008, 5, 30);
     }
 
+    // EFFECTS: checks whether incomes were read correctly
     private void checkIncomes(Report incomeReport) {
         List<Entry> incomes = incomeReport.getAllEntries();
 

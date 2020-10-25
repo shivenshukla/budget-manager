@@ -31,9 +31,14 @@ public abstract class Entry implements Writable {
         this.amount = amount;
     }
 
+    public void setDate(Calendar date) {
+        this.date = date;
+    }
+
     public void setDate(int year, int month, int day) {
         this.date.set(year, month, day);
     }
+
 
     // Getters
     public Entry getEntry() {

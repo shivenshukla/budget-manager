@@ -10,15 +10,17 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// Tests for the JsonReader class
 // I modeled this code on the JsonReaderTest class from https://github.com/stleary/JSON-java
 public class JsonReaderTest extends JsonTest{
+    private Budget testBudget;
     private JsonReader reader;
 
     @Test
     void testReaderNonExistentFile() {
         reader = new JsonReader("./data/noSuchFile.json");
         try {
-            Budget testBudget = reader.read();
+            testBudget = reader.read();
             fail("IOException was not thrown");
         } catch (IOException e) {
             // expected
@@ -29,9 +31,43 @@ public class JsonReaderTest extends JsonTest{
     void testReaderEmptyBudget() {
         reader = new JsonReader("./data/testReaderEmptyBudget.json");
         try {
-            Budget testBudget = reader.read();
+            testBudget = reader.read();
             assertTrue(testBudget.getExpenseReport().isEmpty());
             assertTrue(testBudget.getIncomeReport().isEmpty());
+        } catch (IOException e) {
+            fail("IOException should not have been thrown");
+        }
+    }
+
+    @Test
+    void testReaderExpenseEmptyIncomeMany() {
+        reader = new JsonReader("./data/testReaderExpenseEmptyIncomeMany.json");
+        try {
+            testBudget = reader.read();
+
+            Report expenseReport = testBudget.getExpenseReport();
+            Report incomeReport = testBudget.getIncomeReport();
+
+            assertTrue(expenseReport.isEmpty());
+            assertEquals(3, incomeReport.size());
+            checkIncomes(incomeReport);
+        } catch (IOException e) {
+            fail("IOException should not have been thrown");
+        }
+    }
+
+    @Test
+    void testReaderExpenseManyIncomeEmpty() {
+        reader = new JsonReader("./data/testReaderExpenseManyIncomeEmpty.json");
+        try {
+            testBudget = reader.read();
+
+            Report expenseReport = testBudget.getExpenseReport();
+            Report incomeReport = testBudget.getIncomeReport();
+
+            assertTrue(incomeReport.isEmpty());
+            assertEquals(3, expenseReport.size());
+            checkExpenses(expenseReport);
         } catch (IOException e) {
             fail("IOException should not have been thrown");
         }
@@ -41,7 +77,7 @@ public class JsonReaderTest extends JsonTest{
     void testReaderGeneralBudget() {
         reader = new JsonReader("./data/testReaderGeneralBudget.json");
         try {
-            Budget testBudget = reader.read();
+            testBudget = reader.read();
 
             Report expenseReport = testBudget.getExpenseReport();
             Report incomeReport = testBudget.getIncomeReport();
@@ -51,12 +87,12 @@ public class JsonReaderTest extends JsonTest{
 
             checkExpenses(expenseReport);
             checkIncomes(incomeReport);
-
         } catch (IOException e) {
             fail("IOException should not have been thrown");
         }
     }
 
+    // EFFECTS: checks whether expenses were read correctly
     private void checkExpenses(Report expenseReport) {
         List<Entry> expenses = expenseReport.getAllEntries();
 
@@ -65,6 +101,7 @@ public class JsonReaderTest extends JsonTest{
         checkEntry(expenses.get(2), "test expense 3", 1.50, 2008, 5, 30);
     }
 
+    // EFFECTS: checks whether incomes were read correctly
     private void checkIncomes(Report incomeReport) {
         List<Entry> incomes = incomeReport.getAllEntries();
 

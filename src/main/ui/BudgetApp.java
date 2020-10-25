@@ -14,12 +14,13 @@ import static java.lang.Math.abs;
 
 // Represents the Budget application
 // I modeled this code on the ui package of https://github.students.cs.ubc.ca/CPSC210/TellerApp;
-// Methods saveBudget and loadBudget were modeled on the ui package class from https://github.com/stleary/JSON-java
+// Methods saveBudget and loadBudget were modeled from the ui package of https://github.com/stleary/JSON-java
 public class BudgetApp {
     private static final String BUDGET_DATA = "./data/budget.json";
+
     private Budget budget;
-    private Scanner input;
-    private Scanner inputSentence;
+    private Scanner input;          // used for general input
+    private Scanner inputSentence;  // used for input of description
     private Report expenseReport;
     private Report incomeReport;
     private JsonWriter jsonWriter;
@@ -56,6 +57,20 @@ public class BudgetApp {
     }
 
     // MODIFIES: this
+    // EFFECTS: initializes budget
+    private void initialize() {
+        budget = new Budget();
+        input = new Scanner(System.in);
+        inputSentence = new Scanner(System.in).useDelimiter("\n");
+        expenseReport = budget.getExpenseReport();
+        incomeReport = budget.getIncomeReport();
+        jsonWriter = new JsonWriter(BUDGET_DATA);
+        jsonReader = new JsonReader(BUDGET_DATA);
+    }
+
+    /** methods for processing user command **/
+
+    // MODIFIES: this
     // EFFECTS: processes user command for main menu
     private void processCommand(String command) {
         if (command.equals("b")) {
@@ -83,7 +98,7 @@ public class BudgetApp {
         } else if (command.equals("m")) {
             modifyEntry(expenseReport);
         } else {
-            System.out.println("Uh Oh! You have entered an invalid input...");
+            System.out.println("Uh Oh! You have entered an invalid input...\n");
         }
     }
 
@@ -97,21 +112,11 @@ public class BudgetApp {
         } else if (command.equals("m")) {
             modifyEntry(incomeReport);
         } else {
-            System.out.println("Uh Oh! You have entered an invalid input...");
+            System.out.println("Uh Oh! You have entered an invalid input...\n");
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: initializes budget
-    private void initialize() {
-        budget = new Budget();
-        input = new Scanner(System.in);
-        inputSentence = new Scanner(System.in).useDelimiter("\n");
-        expenseReport = budget.getExpenseReport();
-        incomeReport = budget.getIncomeReport();
-        jsonWriter = new JsonWriter(BUDGET_DATA);
-        jsonReader = new JsonReader(BUDGET_DATA);
-    }
+    /** methods for viewing reports in budget **/
 
     // EFFECTS: displays the budget report
     private void viewBudgetReport() {
@@ -187,6 +192,18 @@ public class BudgetApp {
         }
     }
 
+    // EFFECTS: displays all entries in the given report
+    private void displayEntries(Report report) {
+        int i = 0;
+        System.out.println("Entry Number\t\tDate of Entry\t\tAmount\t\t\tDescription");
+        for (Entry e : report.getAllEntries()) {
+            System.out.printf("%-12d\t\t" + e + "\n", i);
+            i++;
+        }
+    }
+
+    /** methods for displaying menus to user **/
+
     // EFFECTS: displays the main menu of options to the user
     private void displayMainMenu() {
         System.out.println("\nSelect from:");
@@ -216,6 +233,8 @@ public class BudgetApp {
         System.out.println("\td -> description");
     }
 
+    /** methods for doing operations **/
+
     // MODIFIES: this
     // EFFECTS: adds a new income to the incomeReport, if amount >= 0
     private void addIncome() {
@@ -227,15 +246,7 @@ public class BudgetApp {
         } else {
             System.out.print("Enter the description: ");
             String description = inputSentence.next();
-
-            System.out.print("Enter the year: ");
-            int year = input.nextInt();
-            System.out.print("Enter the month (number): ");
-            int month = input.nextInt() - 1;
-            System.out.print("Enter the day (number): ");
-            int day = input.nextInt();
-
-            Calendar date = new GregorianCalendar(year, month, day);
+            Calendar date = makeDate();
 
             Income i = new Income(description, amount, date);
             budget.addIncome(i);
@@ -254,15 +265,7 @@ public class BudgetApp {
         } else {
             System.out.print("Enter the description: ");
             String description = inputSentence.next();
-
-            System.out.print("Enter the year: ");
-            int year = input.nextInt();
-            System.out.print("Enter the month (number): ");
-            int month = input.nextInt() - 1;
-            System.out.print("Enter the day (number): ");
-            int day = input.nextInt();
-
-            Calendar date = new GregorianCalendar(year, month, day);
+            Calendar date = makeDate();
 
             Expense e = new Expense(description, amount, date);
             budget.addExpense(e);
@@ -332,16 +335,8 @@ public class BudgetApp {
     // EFFECTS: processes user command and modifies the given entry
     private void doModification(String command, Entry entry) {
         if (command.equals("e")) {
-            System.out.print("Enter the year: ");
-            int year = input.nextInt();
-
-            System.out.print("Enter the month (number): ");
-            int month = input.nextInt() - 1;
-
-            System.out.print("Enter the day (number): ");
-            int day = input.nextInt();
-
-            entry.setDate(year, month, day);
+            Calendar date = makeDate();
+            entry.setDate(date);
         } else if (command.equals("a")) {
             System.out.print("Enter the amount: ");
             double amount = input.nextDouble();
@@ -361,18 +356,22 @@ public class BudgetApp {
         }
     }
 
-    // EFFECTS: displays all entries in the given report
-    private void displayEntries(Report report) {
-        int i = 0;
-        System.out.println("Entry Number\t\tDate of Entry\t\tAmount\t\t\tDescription");
-        for (Entry e : report.getAllEntries()) {
-            System.out.printf("%-12d\t\t" + e + "\n", i);
-            i++;
-        }
+    // EFFECTS: processes user input and returns a new date
+    private Calendar makeDate() {
+        System.out.print("Enter the year: ");
+        int year = input.nextInt();
+        System.out.print("Enter the month (number): ");
+        int month = input.nextInt() - 1;
+        System.out.print("Enter the day (number): ");
+        int day = input.nextInt();
+
+        return new GregorianCalendar(year, month, day);
     }
 
+    /** methods for data persistence **/
+
     // MODIFIES: this
-    // EFFECTS: saves
+    // EFFECTS: saves budget to file
     private void saveBudget() {
         try {
             jsonWriter.open();
@@ -385,7 +384,7 @@ public class BudgetApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: saves
+    // EFFECTS: loads budget from file
     private void loadBudget() {
         try {
             budget = jsonReader.read();

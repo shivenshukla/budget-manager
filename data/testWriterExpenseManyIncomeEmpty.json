@@ -1,0 +1,32 @@
+{
+   "incomeReport": {"entries": []},
+   "expenseReport": {"entries": [
+      {
+         "date": {
+            "month": 10,
+            "year": 2020,
+            "day": 25
+         },
+         "amount": 100,
+         "description": "test expense 1"
+      },
+      {
+         "date": {
+            "month": 2,
+            "year": 1995,
+            "day": 14
+         },
+         "amount": 1234.56,
+         "description": "test expense 2"
+      },
+      {
+         "date": {
+            "month": 5,
+            "year": 2008,
+            "day": 30
+         },
+         "amount": 1.5,
+         "description": "test expense 3"
+      }
+   ]}
+}

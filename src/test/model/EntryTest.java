@@ -18,7 +18,7 @@ public abstract class EntryTest {
 
     @BeforeEach
     void runBefore() {
-        date = new GregorianCalendar(2020, 1, 15);
+        date = new GregorianCalendar(2020, Calendar.FEBRUARY, 15);
     }
 
     @Test
@@ -51,6 +51,6 @@ public abstract class EntryTest {
 
     @Test
     void testToString() {
-        assertEquals("2020-01-15\t\t\t$123.45         Entry", testEntry.toString());
+        assertEquals("Feb 15 2020\t\t\t$123.45         Entry", testEntry.toString());
     }
 }
