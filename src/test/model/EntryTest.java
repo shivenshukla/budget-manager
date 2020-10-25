@@ -32,6 +32,8 @@ public abstract class EntryTest {
 
     @Test
     void testSetters() {
+        Calendar otherDate = new GregorianCalendar(2013, Calendar.DECEMBER, 15);
+
         testEntry.setDescription("New entry");
         testEntry.setAmount(69.99);
         testEntry.setDate(2019, 6, 21);
@@ -41,6 +43,12 @@ public abstract class EntryTest {
         assertEquals(2019, testEntry.getDate().get(Calendar.YEAR));
         assertEquals(6, testEntry.getDate().get(Calendar.MONTH));
         assertEquals(21, testEntry.getDate().get(Calendar.DAY_OF_MONTH));
+
+        testEntry.setDate(otherDate);
+
+        assertEquals(2013, testEntry.getDate().get(Calendar.YEAR));
+        assertEquals(11, testEntry.getDate().get(Calendar.MONTH));
+        assertEquals(15, testEntry.getDate().get(Calendar.DAY_OF_MONTH));
     }
 
     @Test
