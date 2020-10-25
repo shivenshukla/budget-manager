@@ -1,9 +1,10 @@
 package model;
 
-import java.util.List;
+import org.json.JSONObject;
+import persistence.Writable;
 
 // Represents a budget having an expense report and income report
-public class Budget {
+public class Budget implements Writable {
     protected Report expenseReport;
     protected Report incomeReport;
 
@@ -44,5 +45,14 @@ public class Budget {
 
     public Report getExpenseReport() {
         return this.expenseReport;
+    }
+
+    // EFFECTS: returns budget as a JSON object
+    @Override
+    public JSONObject toJson() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("expenseReport", this.expenseReport.toJson());
+        jsonObject.put("incomeReport", this.incomeReport.toJson());
+        return  jsonObject;
     }
 }

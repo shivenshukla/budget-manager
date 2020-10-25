@@ -56,6 +56,7 @@ public class JsonReader {
     public void addExpenseReport(Budget budget, JSONObject jsonObject) {
         JSONObject jsonReport = jsonObject.getJSONObject("expenseReport");
         JSONArray jsonArray = jsonReport.getJSONArray("entries");
+
         for (Object json: jsonArray) {
             JSONObject nextExpense = (JSONObject) json;
             addExpense(budget, nextExpense);
@@ -67,6 +68,7 @@ public class JsonReader {
     public void addIncomeReport(Budget budget, JSONObject jsonObject) {
         JSONObject jsonReport = jsonObject.getJSONObject("incomeReport");
         JSONArray jsonArray = jsonReport.getJSONArray("entries");
+
         for (Object json: jsonArray) {
             JSONObject nextIncome = (JSONObject) json;
             addIncome(budget, nextIncome);
@@ -78,14 +80,7 @@ public class JsonReader {
     public void addExpense(Budget budget, JSONObject jsonObject) {
         String description = jsonObject.getString("description");
         double amount = jsonObject.getDouble("amount");
-
-        JSONObject jsonDate = jsonObject.getJSONObject("date");
-        int year = jsonDate.getInt("year");
-        int month = jsonDate.getInt("month");
-        int day = jsonDate.getInt("day");
-
-        Calendar date = new GregorianCalendar();
-        date.set(year, month, day);
+        Calendar date = getDate(jsonObject);
 
         Expense expense = new Expense(description, amount, date);
         budget.addExpense(expense);
@@ -96,8 +91,16 @@ public class JsonReader {
     public void addIncome(Budget budget, JSONObject jsonObject) {
         String description = jsonObject.getString("description");
         double amount = jsonObject.getDouble("amount");
+        Calendar date = getDate(jsonObject);
 
+        Income income = new Income(description, amount, date);
+        budget.addIncome(income);
+    }
+
+    // EFFECTS: parses date from JSON object and returns it
+    private Calendar getDate(JSONObject jsonObject) {
         JSONObject jsonDate = jsonObject.getJSONObject("date");
+
         int year = jsonDate.getInt("year");
         int month = jsonDate.getInt("month");
         int day = jsonDate.getInt("day");
@@ -105,7 +108,6 @@ public class JsonReader {
         Calendar date = new GregorianCalendar();
         date.set(year, month, day);
 
-        Income income = new Income(description, amount, date);
-        budget.addIncome(income);
+        return date;
     }
 }

@@ -1,11 +1,15 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 // Represents a report which is a list of entries
-public abstract class Report {
+public abstract class Report implements Writable {
     List<Entry> entries;
 
     // EFFECTS: constructs an empty Report
@@ -66,5 +70,23 @@ public abstract class Report {
     // EFFECTS: returns true if the Report has no entries
     public boolean isEmpty() {
         return (entries.size() == 0);
+    }
+
+    // EFFECTS: returns incomeReport as a JSON object
+    @Override
+    public JSONObject toJson() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("entries", entriesToJSon());
+        return jsonObject;
+    }
+
+    // EFFECTS: returns entries in the Report as a JSON array
+    protected JSONArray entriesToJSon() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Entry e: this.entries) {
+            jsonArray.put(e.toJson());
+        }
+        return  jsonArray;
     }
 }

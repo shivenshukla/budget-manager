@@ -6,17 +6,17 @@ import model.Report;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// I have modeled this code on the JsonReaderTest class from https://github.com/stleary/JSON-java
-public class JsonReaderTest {
+// I modeled this code on the JsonReaderTest class from https://github.com/stleary/JSON-java
+public class JsonReaderTest extends JsonTest{
+    private JsonReader reader;
 
     @Test
     void testReaderNonExistentFile() {
-        JsonReader reader = new JsonReader("./data/noSuchFile.json");
+        reader = new JsonReader("./data/noSuchFile.json");
         try {
             Budget testBudget = reader.read();
             fail("IOException was not thrown");
@@ -27,19 +27,19 @@ public class JsonReaderTest {
 
     @Test
     void testReaderEmptyBudget() {
-        JsonReader reader = new JsonReader("./data/testReaderEmptyBudget.json");
+        reader = new JsonReader("./data/testReaderEmptyBudget.json");
         try {
             Budget testBudget = reader.read();
             assertTrue(testBudget.getExpenseReport().isEmpty());
             assertTrue(testBudget.getIncomeReport().isEmpty());
         } catch (IOException e) {
-            fail("Could not read from file");
+            fail("IOException should not have been thrown");
         }
     }
 
     @Test
     void testReaderGeneralBudget() {
-        JsonReader reader = new JsonReader("./data/testReaderGeneralBudget.json");
+        reader = new JsonReader("./data/testReaderGeneralBudget.json");
         try {
             Budget testBudget = reader.read();
 
@@ -53,51 +53,23 @@ public class JsonReaderTest {
             checkIncomes(incomeReport);
 
         } catch (IOException e) {
-            fail("Could not read from file");
+            fail("IOException should not have been thrown");
         }
     }
 
     private void checkExpenses(Report expenseReport) {
         List<Entry> expenses = expenseReport.getAllEntries();
 
-        assertEquals("test expense 1", expenses.get(0).getDescription());
-        assertEquals(100, expenses.get(0).getAmount());
-        assertEquals(2020, expenses.get(0).getDate().get(Calendar.YEAR));
-        assertEquals(10, expenses.get(0).getDate().get(Calendar.MONTH));
-        assertEquals(25, expenses.get(0).getDate().get(Calendar.DAY_OF_MONTH));
-
-        assertEquals("test expense 2", expenses.get(1).getDescription());
-        assertEquals(1234.56, expenses.get(1).getAmount());
-        assertEquals(1995, expenses.get(1).getDate().get(Calendar.YEAR));
-        assertEquals(2, expenses.get(1).getDate().get(Calendar.MONTH));
-        assertEquals(14, expenses.get(1).getDate().get(Calendar.DAY_OF_MONTH));
-
-        assertEquals("test expense 3", expenses.get(2).getDescription());
-        assertEquals(1.50, expenses.get(2).getAmount());
-        assertEquals(2008, expenses.get(2).getDate().get(Calendar.YEAR));
-        assertEquals(5, expenses.get(2).getDate().get(Calendar.MONTH));
-        assertEquals(30, expenses.get(2).getDate().get(Calendar.DAY_OF_MONTH));
+        checkEntry(expenses.get(0), "test expense 1", 100, 2020, 10, 25 );
+        checkEntry(expenses.get(1), "test expense 2", 1234.56, 1995, 2,14);
+        checkEntry(expenses.get(2), "test expense 3", 1.50, 2008, 5, 30);
     }
 
     private void checkIncomes(Report incomeReport) {
         List<Entry> incomes = incomeReport.getAllEntries();
 
-        assertEquals("test income 1", incomes.get(0).getDescription());
-        assertEquals(14100, incomes.get(0).getAmount());
-        assertEquals(2019, incomes.get(0).getDate().get(Calendar.YEAR));
-        assertEquals(8, incomes.get(0).getDate().get(Calendar.MONTH));
-        assertEquals(29, incomes.get(0).getDate().get(Calendar.DAY_OF_MONTH));
-
-        assertEquals("test income 2", incomes.get(1).getDescription());
-        assertEquals(2000.00, incomes.get(1).getAmount());
-        assertEquals(2020, incomes.get(1).getDate().get(Calendar.YEAR));
-        assertEquals(2, incomes.get(1).getDate().get(Calendar.MONTH));
-        assertEquals(1, incomes.get(1).getDate().get(Calendar.DAY_OF_MONTH));
-
-        assertEquals("test income 3", incomes.get(2).getDescription());
-        assertEquals(340.00, incomes.get(2).getAmount());
-        assertEquals(2001, incomes.get(2).getDate().get(Calendar.YEAR));
-        assertEquals(10, incomes.get(2).getDate().get(Calendar.MONTH));
-        assertEquals(20, incomes.get(2).getDate().get(Calendar.DAY_OF_MONTH));
+        checkEntry(incomes.get(0), "test income 1", 14100, 2019, 8, 29);
+        checkEntry(incomes.get(1), "test income 2", 2000.00, 2020, 2, 1);
+        checkEntry(incomes.get(2), "test income 3", 340.00, 2001, 10, 20);
     }
 }
