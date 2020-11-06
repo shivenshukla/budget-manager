@@ -14,8 +14,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.stream.Stream;
 
-// I have modeled this code on the JsonReader class from https://github.com/stleary/JSON-java
 // Represents a reader that reads budget from JSON data stored in file
+// This code is modeled on the JsonReader class from https://github.com/stleary/JSON-java
 public class JsonReader {
     private String source;
 
@@ -105,8 +105,7 @@ public class JsonReader {
         int month = jsonDate.getInt("month");
         int day = jsonDate.getInt("day");
 
-        Calendar date = new GregorianCalendar();
-        date.set(year, month, day);
+        Calendar date = new GregorianCalendar(year, month, day);
 
         return date;
     }

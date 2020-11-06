@@ -1,4 +1,12 @@
 {
-   "incomeReport": {"entries": []},
+   "incomeReport": {"entries": [{
+      "date": {
+         "month": 7,
+         "year": 2021,
+         "day": 20
+      },
+      "amount": 100,
+      "description": "test"
+   }]},
    "expenseReport": {"entries": []}
 }

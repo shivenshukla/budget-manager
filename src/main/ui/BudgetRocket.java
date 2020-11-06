@@ -1,10 +1,6 @@
 package ui;
 
-import com.sun.org.apache.xpath.internal.objects.XNumber;
-import model.Budget;
-import model.Entry;
-import model.Expense;
-import model.Report;
+import model.*;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -37,9 +33,12 @@ public class BudgetRocket extends JFrame {
     private JFrame mainFrame;
     private JPanel mainPanel;
     private JPanel budgetPanel;
-    private JPanel expensesPanel;
-    private JPanel incomesPanel;
-    private JPanel addEntryPanel;
+    private JPanel expenseReportPanel;
+    private JPanel incomeReportPanel;
+    private JPanel addExpensePanel;
+    private JPanel addIncomePanel;
+    private JPanel modifyIncomePanel;
+    private JPanel modifyExpensePanel;
 
     private DefaultListModel<Entry> expensesModel;
     private JList<Entry> expenses;
@@ -52,10 +51,14 @@ public class BudgetRocket extends JFrame {
     JFormattedTextField amountField;
     JTextField descriptionField;
 
+    SpinnerNumberModel dayModel;
+    SpinnerNumberModel monthModel;
+    SpinnerNumberModel yearModel;
+
     // MODIFIES: this
     // EFFECTS: runs the application
     public BudgetRocket() {
-        initializeFields();
+        initializeBudgetFields();
         initializePanels();
         initializeMainFrame();
     }
@@ -63,14 +66,14 @@ public class BudgetRocket extends JFrame {
     // MODIFIES: this
     // EFFECTS: constructs a new budget with an empty income and expense report.
     // Instantiates a new JsonReader and JsonWriter with the BUDGET_DATA file.
-    public void initializeFields() {
+    public void initializeBudgetFields() {
         budget = new Budget();
+
         expenseReport = budget.getExpenseReport();
         incomeReport = budget.getIncomeReport();
 
         jsonReader = new JsonReader(BUDGET_DATA);
         jsonWriter = new JsonWriter(BUDGET_DATA);
-
     }
 
     /** Main frame + Menu Bar **/
@@ -99,23 +102,25 @@ public class BudgetRocket extends JFrame {
 
         JMenuItem saveItem = new JMenuItem("Save");
         JMenuItem loadItem = new JMenuItem("Load");
+        JMenuItem homeItem =  new JMenuItem("Home");
         JMenuItem budgetItem = new JMenuItem("Budget");
         JMenuItem expensesItem = new JMenuItem("Expenses");
         JMenuItem incomesItem = new JMenuItem("Incomes");
 
         saveItem.addActionListener(new SaveBudget());
-
         loadItem.addActionListener(new LoadBudget());
 
-        budgetItem.addActionListener(new OpenBudget());
+        budgetItem.setActionCommand("openBudget");
+        budgetItem.addActionListener(new OpenAction());
 
-        expensesItem.addActionListener(new OpenExpenses());
+        expensesItem.setActionCommand("openExpenseReport");
+        expensesItem.addActionListener(new OpenAction());
 
-        incomesItem.addActionListener(new OpenIncomes());
+        incomesItem.setActionCommand("openIncomeReport");
+        incomesItem.addActionListener(new OpenAction());
 
-        JMenuItem homeItem =  new JMenuItem("Home");
-
-        homeItem.addActionListener(new ReturnHome());
+        homeItem.setActionCommand("openHome");
+        homeItem.addActionListener(new OpenAction());
 
         JMenu fileMenu = new JMenu("File");
         JMenu viewMenu = new JMenu("View");
@@ -141,9 +146,12 @@ public class BudgetRocket extends JFrame {
     public void initializePanels() {
         initializeMainPanel();
         initializeBudgetPanel();
-        initializeExpensesPanel();
-        initializeIncomesPanel();
-        initializeAddEntryPanel();
+        initializeExpenseReportPanel();
+        initializeIncomeReportPanel();
+        initializeAddIncomePanel();
+        initializeAddExpensePanel();
+        initializeModifyIncomePanel();
+        initializeModifyExpensePanel();
     }
 
     // MODIFIES: this
@@ -172,7 +180,7 @@ public class BudgetRocket extends JFrame {
 
     // MODIFIES: this
     // EFFECTS: constructs a JPanel for the expense report
-    public void initializeExpensesPanel() {
+    public void initializeExpenseReportPanel() {
         JLabel title = new JLabel("Expense Report");
         title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
         title.setForeground(Color.WHITE);
@@ -180,9 +188,9 @@ public class BudgetRocket extends JFrame {
         BorderLayout expensesLayout = new BorderLayout();
         expensesLayout.setVgap(5);
 
-        expensesPanel = new JPanel(expensesLayout);
-        expensesPanel.setBackground(Color.GRAY);
-        expensesPanel.add(title, BorderLayout.NORTH);
+        expenseReportPanel = new JPanel(expensesLayout);
+        expenseReportPanel.setBackground(Color.GRAY);
+        expenseReportPanel.add(title, BorderLayout.NORTH);
 
         expensesModel = new DefaultListModel<>();
         expenses = new JList<>();
@@ -194,14 +202,98 @@ public class BudgetRocket extends JFrame {
 
         JScrollPane listScrollPane = new JScrollPane(expenses);
         listScrollPane.setPreferredSize(new Dimension(100, 100));
-        expensesPanel.add(listScrollPane, BorderLayout.CENTER);
+        expenseReportPanel.add(listScrollPane, BorderLayout.CENTER);
 
+        setReportPanelButtons(expenseReportPanel, "expense");
+
+        expenseReportPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    }
+
+    // MODIFIES: this
+    // EFFECTS: constructs a JPanel for the income report
+    public void initializeIncomeReportPanel() {
+        JLabel title = new JLabel("Income Report");
+        title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
+        title.setForeground(Color.WHITE);
+
+        BorderLayout expensesLayout = new BorderLayout();
+        expensesLayout.setVgap(5);
+
+        incomeReportPanel = new JPanel(expensesLayout);
+        incomeReportPanel.setBackground(Color.GRAY);
+        incomeReportPanel.add(title, BorderLayout.NORTH);
+
+        incomesModel = new DefaultListModel<>();
+        incomes = new JList<>();
+        incomes.setModel(incomesModel);
+
+        incomes.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        incomes.setLayoutOrientation(JList.VERTICAL);
+        incomes.setVisibleRowCount(-1);
+
+        JScrollPane listScrollPane = new JScrollPane(incomes);
+        listScrollPane.setPreferredSize(new Dimension(100, 100));
+        incomeReportPanel.add(listScrollPane, BorderLayout.CENTER);
+
+        setReportPanelButtons(incomeReportPanel, "income");
+
+        incomeReportPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    }
+
+    public void initializeAddExpensePanel() {
+        addExpensePanel = new JPanel(new GridLayout(0, 2, 10, 0));
+
+        setEntryLeftPanel(addExpensePanel, "expense");
+        setEntryRightPanel(addExpensePanel, "openExpenseReport");
+
+        addExpensePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    }
+
+    // MODIFIES: this
+    // EFFECTS:
+    public void initializeAddIncomePanel() {
+        addIncomePanel = new JPanel(new GridLayout(0, 2, 10, 0));
+
+        setEntryLeftPanel(addIncomePanel, "income");
+        setEntryRightPanel(addIncomePanel, "openIncomeReport");
+
+        addIncomePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    }
+
+    // MODIFIES: this
+    // EFFECTS:
+    public void initializeModifyExpensePanel() {
+        modifyExpensePanel = new JPanel(new GridLayout(0, 2, 10, 0));
+
+        setEntryLeftPanel(modifyExpensePanel, "expense");
+        setEntryRightPanel(modifyExpensePanel, "openExpenseReport");
+
+        modifyExpensePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    }
+
+    public void initializeModifyIncomePanel() {
+        modifyIncomePanel = new JPanel(new GridLayout(0, 2, 10, 0));
+
+        setEntryLeftPanel(modifyIncomePanel, "income");
+        setEntryRightPanel(modifyIncomePanel, "openIncomeReport");
+
+        modifyIncomePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    }
+
+    public void setReportPanelButtons(JComponent parent, String actionCommand) {
         JPanel buttons = new JPanel(new GridLayout(0, 3, 2, 0));
 
         JButton addButton = new JButton("Add");
+        addButton.setActionCommand(actionCommand);
         addButton.addActionListener(new AddEntry());
+
         JButton modifyButton = new JButton("Modify");
+        modifyButton.setActionCommand(actionCommand);
+        modifyButton.addActionListener(new ModifyEntry());
+
         JButton deleteButton = new JButton("Delete");
+        deleteButton.setActionCommand(actionCommand);
+        deleteButton.addActionListener(new DeleteEntry());
 
         addButton.setBackground(Color.WHITE);
         modifyButton.setBackground(Color.WHITE);
@@ -211,44 +303,36 @@ public class BudgetRocket extends JFrame {
         buttons.add(modifyButton);
         buttons.add(deleteButton);
 
-        deleteButton.addActionListener(new DeleteEntry());
-
-        expensesPanel.add(buttons, BorderLayout.PAGE_END);
-        expensesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        parent.add(buttons, BorderLayout.PAGE_END);
     }
 
+    /** Helper methods for panels **/
 
-    // MODIFIES: this
-    // EFFECTS: constructs a JPanel for the income report
-    public void initializeIncomesPanel() {
-        JLabel title = new JLabel("Income Report");
-        title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
-        title.setForeground(Color.WHITE);
+    public void setEntryLeftPanel(JComponent parent, String actionCommand) {
+        JPanel labelPanel = new JPanel(new GridLayout(6, 1, 0, 10));
 
-        incomesPanel = new JPanel();
-        incomesPanel.setBackground(Color.GRAY);
-        incomesPanel.add(title, BorderLayout.NORTH);
+        JLabel dayLabel = new JLabel("Day", JLabel.CENTER);
+        JLabel monthLabel = new JLabel("Month", JLabel.CENTER);
+        JLabel yearLabel = new JLabel("Year", JLabel.CENTER);
+        JLabel amountLabel = new JLabel("Amount", JLabel.CENTER);
+        JLabel descriptionLabel = new JLabel("Description", JLabel.CENTER);
+
+        labelPanel.add(dayLabel);
+        labelPanel.add(monthLabel);
+        labelPanel.add(yearLabel);
+        labelPanel.add(amountLabel);
+        labelPanel.add(descriptionLabel);
+
+        JButton confirmButton = new JButton("Confirm");
+        confirmButton.setActionCommand(actionCommand);
+        confirmButton.addActionListener(new ConfirmEntry());
+        labelPanel.add(confirmButton);
+
+        parent.add(labelPanel);
     }
 
-    // MODIFIES: this
-    // EFFECTS:
-    public void initializeAddEntryPanel() {
-        addEntryPanel = new JPanel(new GridLayout(6, 2,10, 10));
-
-        // Date Spinners
-        Calendar currentDate = new GregorianCalendar();
-        int currentDay = currentDate.get(Calendar.DAY_OF_MONTH);
-        int currentMonth = currentDate.get(Calendar.MONTH) + 1;
-        int currentYear = currentDate.get(Calendar.YEAR);
-
-        SpinnerNumberModel dayModel = new SpinnerNumberModel(currentDay, 1, 31, 1);
-        daySpinner = new JSpinner(dayModel);
-
-        SpinnerNumberModel monthModel = new SpinnerNumberModel(currentMonth, 1, 12, 1);
-        monthSpinner = new JSpinner(monthModel);
-
-        SpinnerNumberModel yearModel = new SpinnerNumberModel(currentYear, 1900, 2100, 1);
-        yearSpinner = new JSpinner(yearModel);
+    public void setEntryRightPanel(JComponent parent, String actionCommand) {
+        JPanel fieldsPanel = new JPanel(new GridLayout(6, 1, 0, 10));
 
         NumberFormat amountFormat = NumberFormat.getNumberInstance();
         amountFormat.setMinimumFractionDigits(2);
@@ -258,43 +342,36 @@ public class BudgetRocket extends JFrame {
         descriptionField = new JTextField();
         descriptionField.setText("Enter here");
 
-        JLabel dayLabel = new JLabel("Day", JLabel.CENTER);
-        JLabel monthLabel = new JLabel("Month", JLabel.CENTER);
-        JLabel yearLabel = new JLabel("Year", JLabel.CENTER);
-        JLabel amountLabel = new JLabel("Amount", JLabel.CENTER);
-        JLabel descriptionLabel = new JLabel("Description", JLabel.CENTER);
+        setEntrySpinners();
 
-        addEntryPanel.add(dayLabel);
-        addEntryPanel.add(daySpinner);
-
-        addEntryPanel.add(monthLabel);
-        addEntryPanel.add(monthSpinner);
-
-        addEntryPanel.add(yearLabel);
-        addEntryPanel.add(yearSpinner);
-
-        addEntryPanel.add(amountLabel);
-        addEntryPanel.add(amountField);
-
-        addEntryPanel.add(descriptionLabel);
-        addEntryPanel.add(descriptionField);
-
-        JButton confirmButton = new JButton("Confirm");
-        confirmButton.addActionListener(new DoConfirm());
+        fieldsPanel.add(daySpinner);
+        fieldsPanel.add(monthSpinner);
+        fieldsPanel.add(yearSpinner);
+        fieldsPanel.add(amountField);
+        fieldsPanel.add(descriptionField);
 
         JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(new OpenExpenses());
+        cancelButton.setActionCommand(actionCommand);
+        cancelButton.addActionListener(new OpenAction());
+        fieldsPanel.add(cancelButton);
 
-        addEntryPanel.add(confirmButton);
-        addEntryPanel.add(cancelButton);
-
-        addEntryPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        parent.add(fieldsPanel);
     }
 
-    // MODIFIES: this
-    // EFFECTS:
-    public void initializeModifyEntryPanel() {
-        // TODO: complete the implementation of this method
+    public void setEntrySpinners() {
+        Calendar currentDate = new GregorianCalendar();
+        int currentDay = currentDate.get(Calendar.DAY_OF_MONTH);
+        int currentMonth = currentDate.get(Calendar.MONTH) + 1;
+        int currentYear = currentDate.get(Calendar.YEAR);
+
+        dayModel = new SpinnerNumberModel(currentDay, 1, 31, 1);
+        daySpinner = new JSpinner(dayModel);
+
+        monthModel = new SpinnerNumberModel(currentMonth, 1, 12, 1);
+        monthSpinner = new JSpinner(monthModel);
+
+        yearModel = new SpinnerNumberModel(currentYear, 1900, 2100, 1);
+        yearSpinner = new JSpinner(yearModel);
     }
 
     // MODIFIES: this
@@ -307,52 +384,40 @@ public class BudgetRocket extends JFrame {
     }
 
     // MODIFIES: this
-    // EFFECTS: updates the expenses in the JList
-    public void updateExpenseReport() {
+    // EFFECTS: updates the the entries in the given list model
+    public void updateBudget() {
         expensesModel.clear();
+        incomesModel.clear();
 
         for (Entry e: expenseReport.getAllEntries()) {
             expensesModel.addElement(e);
         }
-    }
 
-    public static void main(String[] args) {
-        new BudgetRocket();
+        for (Entry i: incomeReport.getAllEntries()) {
+            incomesModel.addElement(i);
+        }
     }
-
-    /** ActionListeners **/
 
     /** ActionListeners for navigation **/
 
-    public class ReturnHome implements ActionListener {
+    public class OpenAction implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            changePanel(mainPanel);
-        }
-    }
-
-    public class OpenBudget implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            changePanel(budgetPanel);
-        }
-    }
-
-    public class OpenExpenses implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            changePanel(expensesPanel);
-        }
-    }
-
-    public class OpenIncomes implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            changePanel(incomesPanel);
+            switch (e.getActionCommand()) {
+                case "openHome":
+                    changePanel(mainPanel);
+                    break;
+                case "openBudget":
+                    changePanel(budgetPanel);
+                    break;
+                case "openExpenseReport":
+                    changePanel(expenseReportPanel);
+                    break;
+                case "openIncomeReport":
+                    changePanel(incomeReportPanel);
+                    break;
+            }
         }
     }
 
@@ -364,24 +429,11 @@ public class BudgetRocket extends JFrame {
         // EFFECTS: adds a new entry to the report
         @Override
         public void actionPerformed(ActionEvent e) {
-            changePanel(addEntryPanel);
-        }
-    }
-
-    public class DoConfirm implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            String description = descriptionField.getText();
-            double amount = ((Number) amountField.getValue()).doubleValue();
-            int month = (int) monthSpinner.getValue() - 1;
-            int day = (int) daySpinner.getValue();
-            int year = (int) yearSpinner.getValue();
-
-            Expense entry = new Expense(description, amount, new GregorianCalendar(year, month, day));
-            budget.addExpense(entry);
-            expensesModel.addElement(entry);
-            changePanel(expensesPanel);
+            if (e.getActionCommand().equals("expense")) {
+                changePanel(addExpensePanel);
+            } else {
+                changePanel(addIncomePanel);
+            }
         }
     }
 
@@ -391,11 +443,21 @@ public class BudgetRocket extends JFrame {
         // EFFECTS: deletes an existing entry from the report
         @Override
         public void actionPerformed(ActionEvent e) {
-            int index = expenses.getSelectedIndex();
-            expensesModel.remove(index);
+            int index;
 
-            Entry entryToDelete = expenseReport.getAllEntries().get(index);
-            expenseReport.deleteEntry(entryToDelete);
+            if (e.getActionCommand().equals("expense")) {
+                index = expenses.getSelectedIndex();
+                expensesModel.remove(index);
+
+                Entry entryToDelete = expenseReport.getAllEntries().get(index);
+                expenseReport.deleteEntry(entryToDelete);
+            } else {
+                index = incomes.getSelectedIndex();
+                incomesModel.remove(index);
+
+                Entry entryToDelete = incomeReport.getAllEntries().get(index);
+                incomeReport.deleteEntry(entryToDelete);
+            }
         }
     }
 
@@ -405,7 +467,49 @@ public class BudgetRocket extends JFrame {
         // EFFECTS: modifies an existing entry in the report
         @Override
         public void actionPerformed(ActionEvent e) {
-            // TODO: complete the implementation of this method
+            int index = expenses.getSelectedIndex();
+            Entry entryToModify = expenseReport.getAllEntries().get(index);
+            String description = entryToModify.getDescription();
+            double amount = entryToModify.getAmount();
+            int year = entryToModify.getDate().get(Calendar.YEAR);
+            int month = entryToModify.getDate().get(Calendar.MONTH) + 1;
+            int day = entryToModify.getDate().get(Calendar.DAY_OF_MONTH);
+
+            descriptionField.setText(description);
+            amountField.setValue(amount);
+            yearSpinner.setValue(year);
+            monthSpinner.setValue(month);
+            daySpinner.setValue(day);
+
+            if (e.getActionCommand().equals("expense")) {
+                changePanel(modifyExpensePanel);
+            } else {
+                changePanel(modifyIncomePanel);
+            }
+        }
+    }
+
+    public class ConfirmEntry implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String description = descriptionField.getText();
+            double amount = ((Number) amountField.getValue()).doubleValue();
+            int month = (int) monthSpinner.getValue() - 1;
+            int day = (int) daySpinner.getValue();
+            int year = (int) yearSpinner.getValue();
+
+            if (e.getActionCommand().equals("expense")) {
+                Expense expense = new Expense(description, amount, new GregorianCalendar(year, month, day));
+                budget.addExpense(expense);
+                expensesModel.addElement(expense);
+                changePanel(expenseReportPanel);
+            } else {
+                Income income = new Income(description, amount, new GregorianCalendar(year, month, day));
+                budget.addIncome(income);
+                incomesModel.addElement(income);
+                changePanel(incomeReportPanel);
+            }
         }
     }
 
@@ -425,8 +529,6 @@ public class BudgetRocket extends JFrame {
             } catch (FileNotFoundException exception) {
                 JOptionPane.showMessageDialog(mainFrame, "Unable to save budget to " + BUDGET_DATA,
                         "Error", JOptionPane.ERROR_MESSAGE);
-            } finally {
-                //Toolkit.getDefaultToolkit().beep();
             }
         }
     }
@@ -442,13 +544,11 @@ public class BudgetRocket extends JFrame {
                 budget = jsonReader.read();
                 expenseReport = budget.getExpenseReport();
                 incomeReport = budget.getIncomeReport();
-                updateExpenseReport();
+                updateBudget();
                 JOptionPane.showMessageDialog(mainFrame, "Budget successfully loaded from " + BUDGET_DATA);
             } catch (IOException exception) {
                 JOptionPane.showMessageDialog(mainFrame, "Unable to load budget from " + BUDGET_DATA,
                         "Error", JOptionPane.ERROR_MESSAGE);
-            } finally {
-                //Toolkit.getDefaultToolkit().beep();
             }
         }
     }

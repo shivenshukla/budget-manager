@@ -13,9 +13,9 @@ import java.util.Scanner;
 import static java.lang.Math.abs;
 
 // Represents the Budget application
-// I modeled this code on the ui package of https://github.students.cs.ubc.ca/CPSC210/TellerApp;
-// Methods saveBudget and loadBudget were modeled from the ui package of https://github.com/stleary/JSON-java
-public class BudgetApp {
+// This code is modeled on the ui package of https://github.students.cs.ubc.ca/CPSC210/TellerApp;
+// Data persistence methods were modeled from the ui package of https://github.com/stleary/JSON-java
+public class BudgetRocketOld {
     private static final String BUDGET_DATA = "./data/budget.json";
 
     private Budget budget;
@@ -27,7 +27,7 @@ public class BudgetApp {
     private JsonReader jsonReader;
 
     // EFFECTS: runs the budget application
-    public BudgetApp() {
+    public BudgetRocketOld() {
         runBudget();
     }
 
