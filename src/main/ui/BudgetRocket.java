@@ -34,8 +34,10 @@ public class BudgetRocket extends JFrame {
     private JPanel budgetPanel;
     private JPanel expensesPanel;
     private JPanel incomesPanel;
-    private JPanel addIncomePanel;
     private JPanel addExpensePanel;
+    private JPanel addIncomePanel;
+    private JPanel modifyExpensePanel;
+    private JPanel modifyIncomePanel;
 
     private DefaultListModel<Entry> expensesModel;
     private JList<Entry> expenses;
@@ -44,6 +46,8 @@ public class BudgetRocket extends JFrame {
 
     private AddEntryTool addExpenseTool;
     private AddEntryTool addIncomeTool;
+    private AddEntryTool modifyExpenseTool;
+    private AddEntryTool modifyIncomeTool;
 
     // MODIFIES: this
     // EFFECTS: runs the application
@@ -138,6 +142,8 @@ public class BudgetRocket extends JFrame {
         initializeIncomesPanel();
         initializeAddExpensePanel();
         initializeAddIncomePanel();
+        initializeModifyExpensePanel();
+        initializeModifyIncomePanel();
     }
 
     // MODIFIES: this
@@ -197,6 +203,8 @@ public class BudgetRocket extends JFrame {
         addButton.addActionListener(new AddEntry());
 
         JButton modifyButton = new JButton("Modify");
+        modifyButton.setActionCommand("expense");
+        modifyButton.addActionListener(new ModifyEntry());
 
         JButton deleteButton = new JButton("Delete");
         deleteButton.setActionCommand("expense");
@@ -248,6 +256,8 @@ public class BudgetRocket extends JFrame {
         addButton.addActionListener(new AddEntry());
 
         JButton modifyButton = new JButton("Modify");
+        modifyButton.setActionCommand("income");
+        modifyButton.addActionListener(new ModifyEntry());
 
         JButton deleteButton = new JButton("Delete");
         deleteButton.setActionCommand("income");
@@ -345,8 +355,52 @@ public class BudgetRocket extends JFrame {
 
     // MODIFIES: this
     // EFFECTS:
-    public void initializeModifyEntryPanel() {
-        // TODO: complete the implementation of this method
+    public void initializeModifyExpensePanel() {
+        modifyExpenseTool = new AddEntryTool();
+        modifyExpensePanel = new JPanel(new BorderLayout());
+        modifyExpensePanel.add(initializeAddEntryPanel(modifyExpenseTool), BorderLayout.CENTER);
+        modifyExpensePanel.add(setModifyExpenseButtons(), BorderLayout.PAGE_END);
+    }
+
+    // MODIFIES: this
+    // EFFECTS:
+    public void initializeModifyIncomePanel() {
+        modifyIncomeTool = new AddEntryTool();
+        modifyIncomePanel = new JPanel(new BorderLayout());
+        modifyIncomePanel.add(initializeAddEntryPanel(modifyIncomeTool), BorderLayout.CENTER);
+        modifyIncomePanel.add(setModifyIncomeButtons(), BorderLayout.PAGE_END);
+    }
+
+    public JPanel setModifyExpenseButtons() {
+        JPanel buttons = new JPanel(new GridLayout(0, 2, 0, 0));
+
+        JButton confirmButton = new JButton("Confirm");
+        confirmButton.setActionCommand("expense");
+        confirmButton.addActionListener(new ConfirmModify());
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new OpenExpenses());
+
+        buttons.add(confirmButton);
+        buttons.add(cancelButton);
+
+        return buttons;
+    }
+
+    public JPanel setModifyIncomeButtons() {
+        JPanel buttons = new JPanel(new GridLayout(0, 2, 0, 0));
+
+        JButton confirmButton = new JButton("Confirm");
+        confirmButton.setActionCommand("income");
+        confirmButton.addActionListener(new ConfirmModify());
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new OpenIncomes());
+
+        buttons.add(confirmButton);
+        buttons.add(cancelButton);
+
+        return buttons;
     }
 
     // MODIFIES: this
@@ -416,8 +470,10 @@ public class BudgetRocket extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getActionCommand().equals("expense")) {
+                addExpenseTool.resetAll();
                 changePanel(addExpensePanel);
             } else {
+                addIncomeTool.resetAll();
                 changePanel(addIncomePanel);
             }
         }
@@ -481,13 +537,60 @@ public class BudgetRocket extends JFrame {
         }
     }
 
-    public class ModifyEntry implements ActionListener {
+    public class ConfirmModify implements ActionListener {
 
-        // MODIFIES: this
-        // EFFECTS: modifies an existing entry in the report
         @Override
         public void actionPerformed(ActionEvent e) {
-            // TODO: complete the implementation of this method
+            int index;
+
+            if (e.getActionCommand().equals("expense")) {
+                String description = modifyExpenseTool.getDescriptionField().getText();
+                double amount = ((Number) modifyExpenseTool.getAmountField().getValue()).doubleValue();
+                int month = (int) modifyExpenseTool.getMonthSpinner().getValue() - 1;
+                int day = (int) modifyExpenseTool.getDaySpinner().getValue();
+                int year = (int) modifyExpenseTool.getYearSpinner().getValue();
+
+                index = expenses.getSelectedIndex();
+
+                Entry entryToModify = expenseReport.getAllEntries().get(index);
+                entryToModify.setDescription(description);
+                entryToModify.setAmount(amount);
+                entryToModify.setDate(year, month, day);
+
+                changePanel(expensesPanel);
+            } else {
+                String description = modifyIncomeTool.getDescriptionField().getText();
+                double amount = ((Number) modifyIncomeTool.getAmountField().getValue()).doubleValue();
+                int month = (int) modifyIncomeTool.getMonthSpinner().getValue() - 1;
+                int day = (int) modifyIncomeTool.getDaySpinner().getValue();
+                int year = (int) modifyIncomeTool.getYearSpinner().getValue();
+
+                index = incomes.getSelectedIndex();
+
+                Entry entryToModify = incomeReport.getAllEntries().get(index);
+                entryToModify.setDescription(description);
+                entryToModify.setAmount(amount);
+                entryToModify.setDate(year, month, day);
+
+                changePanel(incomesPanel);
+            }
+        }
+    }
+
+
+    public class ModifyEntry implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getActionCommand().equals("expense")) {
+                int index = expenses.getSelectedIndex();
+                modifyExpenseTool.setAll(expenseReport.getAllEntries().get(index));
+                changePanel(modifyExpensePanel);
+            } else {
+                int index = incomes.getSelectedIndex();
+                modifyIncomeTool.setAll(incomeReport.getAllEntries().get(index));
+                changePanel(modifyIncomePanel);
+            }
         }
     }
 

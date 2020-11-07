@@ -1,5 +1,7 @@
 package ui.tools;
 
+import model.Entry;
+
 import javax.swing.*;
 import java.text.NumberFormat;
 import java.util.Calendar;
@@ -47,6 +49,32 @@ public class AddEntryTool {
 
         descriptionField = new JTextField();
         descriptionField.setText("Enter here");
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets spinner values to current date; sets description field to "Enter here";
+    // sets amountField to 0.00
+    public void resetAll() {
+        Calendar currentDate = new GregorianCalendar();
+        int currentDay = currentDate.get(Calendar.DAY_OF_MONTH);
+        int currentMonth = currentDate.get(Calendar.MONTH) + 1;
+        int currentYear = currentDate.get(Calendar.YEAR);
+
+        daySpinner.setValue(currentDay);
+        monthSpinner.setValue(currentMonth);
+        yearSpinner.setValue(currentYear);
+        amountField.setValue(0);
+        descriptionField.setText("Enter here");
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets all spinner and field values to corresponding value of field in entry
+    public void setAll(Entry entry) {
+        daySpinner.setValue(entry.getDate().get(Calendar.DAY_OF_MONTH));
+        monthSpinner.setValue(entry.getDate().get(Calendar.MONTH) + 1);
+        yearSpinner.setValue(entry.getDate().get(Calendar.YEAR));
+        amountField.setValue(entry.getAmount());
+        descriptionField.setText(entry.getDescription());
     }
 
     // Getters
