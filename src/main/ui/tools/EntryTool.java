@@ -3,11 +3,11 @@ package ui.tools;
 import model.Entry;
 
 import javax.swing.*;
-import java.text.NumberFormat;
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class AddEntryTool {
+public class EntryTool {
 
     private JSpinner daySpinner;
     private JSpinner monthSpinner;
@@ -16,7 +16,7 @@ public class AddEntryTool {
     private JFormattedTextField amountField;
     private JTextField descriptionField;
 
-    public AddEntryTool() {
+    public EntryTool() {
         initializeSpinners();
         initializeFields();
     }
@@ -37,17 +37,19 @@ public class AddEntryTool {
 
         SpinnerNumberModel yearModel = new SpinnerNumberModel(currentYear, 1900, 2100, 1);
         yearSpinner = new JSpinner(yearModel);
+        yearSpinner.setEditor(new JSpinner.NumberEditor(yearSpinner, "#"));
     }
 
     // MODIFIES: this
     // EFFECTS: initializes amountField and descriptionField
     public void initializeFields() {
-        NumberFormat amountFormat = NumberFormat.getNumberInstance();
-        amountFormat.setMinimumFractionDigits(2);
+        DecimalFormat amountFormat = new DecimalFormat("0.00");
         amountField = new JFormattedTextField(amountFormat);
+        amountField.setHorizontalAlignment(JTextField.CENTER);
         amountField.setValue(0);
 
         descriptionField = new JTextField();
+        descriptionField.setHorizontalAlignment(JTextField.CENTER);
         descriptionField.setText("Enter here");
     }
 

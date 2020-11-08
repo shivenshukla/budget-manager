@@ -61,9 +61,10 @@ public abstract class Entry implements Writable {
     @Override
     public String toString() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd yyyy");
-        String amountStr = String.format("%-15.2f", this.amount);
+        String amountStr = String.format("%-100.2f", this.amount);
         String dateStr = simpleDateFormat.format(this.date.getTime());
-        return dateStr + "\t\t\t$" + amountStr + description;
+        String descriptionStr = String.format("%100s", this.description);
+        return "$" + amountStr + dateStr + descriptionStr;
     }
 
     // EFFECTS: Returns entry as a JSON object
