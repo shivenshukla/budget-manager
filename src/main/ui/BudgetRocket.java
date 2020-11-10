@@ -3,6 +3,7 @@ package ui;
 import model.*;
 import persistence.JsonReader;
 import persistence.JsonWriter;
+import ui.tools.BarChart;
 import ui.tools.EntryTool;
 
 import javax.swing.*;
@@ -41,6 +42,8 @@ public class BudgetRocket extends JFrame {
     private JPanel addIncomePanel;
     private JPanel modifyExpensePanel;
     private JPanel modifyIncomePanel;
+
+    private BarChart barChart;
 
     private DefaultListModel<Entry> expensesModel;
     private JList<Entry> expenses;
@@ -189,6 +192,11 @@ public class BudgetRocket extends JFrame {
         info.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
         info.setForeground(Color.WHITE);
         budgetPanel.add(info, BorderLayout.PAGE_END);
+
+        barChart = new BarChart(0, 0);
+        budgetPanel.add(barChart);
+
+        budgetPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
     public void updateBudgetPanel() {
@@ -203,31 +211,35 @@ public class BudgetRocket extends JFrame {
         } else {
             info.setText("You have a balance of $" + budgetString);
         }
+        budgetPanel.remove(barChart);
+        barChart = new BarChart(expenseReport.sum(), incomeReport.sum());
+        budgetPanel.add(barChart);
     }
-
-    public void drawPieChart() {
-        double expenseTotal = expenseReport.sum();
-        double incomeTotal = incomeReport.sum();
-        double budgetTotal = expenseTotal + incomeTotal;
-        double expensePercentage = expenseTotal / budgetTotal;
-        double incomePercentage = incomeTotal / budgetTotal;
-
-    }
-
 
     // MODIFIES: this
     // EFFECTS: constructs a JPanel for the expense report
     public void initializeExpensesPanel() {
         JLabel title = new JLabel("Expense Report");
-        title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
-        title.setForeground(Color.WHITE);
+        title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
+        title.setForeground(Color.BLACK);
 
-        BorderLayout expensesLayout = new BorderLayout();
-        expensesLayout.setVgap(5);
+        BorderLayout expensesLayout = new BorderLayout(0, 5);
 
         expensesPanel = new JPanel(expensesLayout);
         expensesPanel.setBackground(BACKGROUND_COLOR);
-        expensesPanel.add(title, BorderLayout.NORTH);
+
+        JPanel titlePanel = new JPanel(new BorderLayout(0, 2));
+        titlePanel.add(title, BorderLayout.PAGE_START);
+
+        String dateHeader = String.format("%-100s", "Date");
+        String amountHeader = String.format("%-100s", "Amount");
+        String descriptionHeader = String.format("%-100s", "Description");
+
+        JLabel header = new JLabel(dateHeader + amountHeader + descriptionHeader);
+        titlePanel.setBackground(BACKGROUND_COLOR);
+        titlePanel.add(header, BorderLayout.PAGE_END);
+
+        expensesPanel.add(titlePanel, BorderLayout.NORTH);
 
         expensesModel = new DefaultListModel<>();
         expenses = new JList<>();
