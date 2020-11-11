@@ -56,6 +56,8 @@ public class BudgetRocket extends JFrame {
     private EntryTool modifyIncomeTool;
 
     private JLabel info;
+    private JLabel expenseInfo;
+    private JLabel incomeInfo;
 
     // MODIFIES: this
     // EFFECTS: runs the application
@@ -183,15 +185,27 @@ public class BudgetRocket extends JFrame {
     public void initializeBudgetPanel() {
         JLabel title = new JLabel("Budget Report");
         title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
-        title.setForeground(Color.WHITE);
+        title.setForeground(Color.BLACK);
 
         budgetPanel = new JPanel(new BorderLayout());
         budgetPanel.setBackground(BACKGROUND_COLOR);
         budgetPanel.add(title, BorderLayout.NORTH);
 
-        info.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
-        info.setForeground(Color.WHITE);
-        budgetPanel.add(info, BorderLayout.PAGE_END);
+        JPanel infoPanel = new JPanel(new GridLayout(3, 0));
+        infoPanel.setBackground(BACKGROUND_COLOR);
+        infoPanel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+        infoPanel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+        infoPanel.setForeground(Color.BLACK);
+        infoPanel.setPreferredSize(new Dimension(WIDTH, 100));
+
+        expenseInfo = new JLabel(String.format("Total expenses: $%.2f", expenseReport.sum()));
+        incomeInfo = new JLabel(String.format("Total income: $%.2f", incomeReport.sum()));
+
+        infoPanel.add(expenseInfo);
+        infoPanel.add(incomeInfo);
+        infoPanel.add(info);
+
+        budgetPanel.add(infoPanel, BorderLayout.PAGE_END);
 
         barChart = new BarChart(0, 0);
         budgetPanel.add(barChart);
@@ -211,6 +225,10 @@ public class BudgetRocket extends JFrame {
         } else {
             info.setText("You have a balance of $" + budgetString);
         }
+
+        expenseInfo.setText(String.format("Total expenses: $%.2f", expenseReport.sum()));
+        incomeInfo.setText(String.format("Total income: $%.2f", incomeReport.sum()));
+
         budgetPanel.remove(barChart);
         barChart = new BarChart(expenseReport.sum(), incomeReport.sum());
         budgetPanel.add(barChart);
@@ -219,26 +237,12 @@ public class BudgetRocket extends JFrame {
     // MODIFIES: this
     // EFFECTS: constructs a JPanel for the expense report
     public void initializeExpensesPanel() {
-        JLabel title = new JLabel("Expense Report");
-        title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
-        title.setForeground(Color.BLACK);
-
         BorderLayout expensesLayout = new BorderLayout(0, 5);
 
         expensesPanel = new JPanel(expensesLayout);
         expensesPanel.setBackground(BACKGROUND_COLOR);
 
-        JPanel titlePanel = new JPanel(new BorderLayout(0, 2));
-        titlePanel.add(title, BorderLayout.PAGE_START);
-
-        String dateHeader = String.format("%-100s", "Date");
-        String amountHeader = String.format("%-100s", "Amount");
-        String descriptionHeader = String.format("%-100s", "Description");
-
-        JLabel header = new JLabel(dateHeader + amountHeader + descriptionHeader);
-        titlePanel.setBackground(BACKGROUND_COLOR);
-        titlePanel.add(header, BorderLayout.PAGE_END);
-
+        JPanel titlePanel = getTitlePanel("Expense Report");
         expensesPanel.add(titlePanel, BorderLayout.NORTH);
 
         expensesModel = new DefaultListModel<>();
@@ -257,6 +261,53 @@ public class BudgetRocket extends JFrame {
 
         expensesPanel.add(buttons, BorderLayout.PAGE_END);
         expensesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    }
+
+    // MODIFIES: this
+    // EFFECTS: constructs a JPanel for the income report
+    public void initializeIncomesPanel() {
+        BorderLayout incomesLayout = new BorderLayout(0, 5);
+
+        incomesPanel = new JPanel(incomesLayout);
+        incomesPanel.setBackground(BACKGROUND_COLOR);
+
+        JPanel titlePanel = getTitlePanel("Income Report");
+        incomesPanel.add(titlePanel, BorderLayout.NORTH);
+
+        incomesModel = new DefaultListModel<>();
+        incomes = new JList<>();
+        incomes.setModel(incomesModel);
+
+        incomes.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        incomes.setLayoutOrientation(JList.VERTICAL);
+        incomes.setVisibleRowCount(-1);
+
+        JScrollPane listScrollPane = new JScrollPane(incomes);
+        listScrollPane.setPreferredSize(new Dimension(100, 100));
+        incomesPanel.add(listScrollPane, BorderLayout.CENTER);
+
+        JPanel buttons = setReportButtons("income");
+
+        incomesPanel.add(buttons, BorderLayout.PAGE_END);
+        incomesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    }
+
+    private JPanel getTitlePanel(String title) {
+        JLabel titleLabel = new JLabel(title);
+        titleLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
+        titleLabel.setForeground(Color.BLACK);
+
+        JPanel titlePanel = new JPanel(new BorderLayout(0, 2));
+        titlePanel.add(titleLabel, BorderLayout.PAGE_START);
+
+        String dateHeader = String.format("%-100s", "Date");
+        String amountHeader = String.format("%-100s", "Amount");
+        String descriptionHeader = String.format("%-100s", "Description");
+
+        JLabel header = new JLabel(dateHeader + amountHeader + descriptionHeader);
+        titlePanel.setBackground(BACKGROUND_COLOR);
+        titlePanel.add(header, BorderLayout.PAGE_END);
+        return titlePanel;
     }
 
     private JPanel setReportButtons(String actionCommand) {
@@ -284,39 +335,6 @@ public class BudgetRocket extends JFrame {
         buttons.add(deleteButton);
 
         return buttons;
-    }
-
-
-    // MODIFIES: this
-    // EFFECTS: constructs a JPanel for the income report
-    public void initializeIncomesPanel() {
-        JLabel title = new JLabel("Income Report");
-        title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
-        title.setForeground(Color.WHITE);
-
-        BorderLayout expensesLayout = new BorderLayout();
-        expensesLayout.setVgap(5);
-
-        incomesPanel = new JPanel(expensesLayout);
-        incomesPanel.setBackground(BACKGROUND_COLOR);
-        incomesPanel.add(title, BorderLayout.NORTH);
-
-        incomesModel = new DefaultListModel<>();
-        incomes = new JList<>();
-        incomes.setModel(incomesModel);
-
-        incomes.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        incomes.setLayoutOrientation(JList.VERTICAL);
-        incomes.setVisibleRowCount(-1);
-
-        JScrollPane listScrollPane = new JScrollPane(incomes);
-        listScrollPane.setPreferredSize(new Dimension(100, 100));
-        incomesPanel.add(listScrollPane, BorderLayout.CENTER);
-
-        JPanel buttons = setReportButtons("income");
-
-        incomesPanel.add(buttons, BorderLayout.PAGE_END);
-        incomesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
     public void initializeAddExpensePanel() {
