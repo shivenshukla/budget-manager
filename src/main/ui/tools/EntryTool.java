@@ -7,6 +7,7 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+// Represents fields for adding or modifying an entry
 public class EntryTool {
 
     private JSpinner daySpinner;

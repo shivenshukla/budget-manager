@@ -41,7 +41,7 @@ public class BarChart extends JPanel {
     // MODIFIES: this
     // EFFECTS: draws a title onto the JPanel
     public void drawTitle() {
-        JLabel title = new JLabel("Expense vs Income");
+        JLabel title = new JLabel("Total Budget");
         title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
         title.setForeground(Color.BLACK);
         add(title, BorderLayout.CENTER);
@@ -95,7 +95,7 @@ public class BarChart extends JPanel {
         g.fillRect(x, CHART_HEIGHT - height, BAR_WIDTH,  height);
     }
 
-    // EFFECTS:
+    // TODO: add specification
     public double getHeightRatio() {
         return Math.max(expenseTotal, incomeTotal) / (CHART_HEIGHT - 50);
     }

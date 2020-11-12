@@ -23,8 +23,8 @@ public class BudgetRocket extends JFrame {
 
     private static final int X = 500;      // initial x pos of application window
     private static final int Y = 200;      // initial y pos of application window
-    private static final int WIDTH = 1000; // initial width of application window
-    private static final int HEIGHT = 700; // initial height of application window
+    private static final int WIDTH = 1000; // width of application window
+    private static final int HEIGHT = 700; // height of application window
 
     private Budget budget;
     private Report expenseReport;
@@ -62,29 +62,28 @@ public class BudgetRocket extends JFrame {
     // MODIFIES: this
     // EFFECTS: runs the application
     public BudgetRocket() {
-        initializeFields();
+        initializeBudgetFields();
         initializePanels();
         initializeMainFrame();
     }
 
     // MODIFIES: this
-    // EFFECTS: constructs a new budget with an empty income and expense report.
-    // Instantiates a new JsonReader and JsonWriter with the BUDGET_DATA file.
-    public void initializeFields() {
+    // EFFECTS: constructs a new budget with an empty income and expense report;
+    // instantiates a new JsonReader and JsonWriter with the BUDGET_DATA file.
+    public void initializeBudgetFields() {
         budget = new Budget();
+
         expenseReport = budget.getExpenseReport();
         incomeReport = budget.getIncomeReport();
 
         jsonReader = new JsonReader(BUDGET_DATA);
         jsonWriter = new JsonWriter(BUDGET_DATA);
-
-        info =  new JLabel();
     }
 
-    /** Main frame + Menu Bar **/
+    /** Main frame **/
 
     // MODIFIES: this
-    // EFFECTS: constructs the main JFrame of the application
+    // EFFECTS: constructs the main frame
     public void initializeMainFrame() {
         mainFrame = new JFrame("Budget Rocket");
         mainFrame.setLayout(new BorderLayout());
@@ -100,18 +99,21 @@ public class BudgetRocket extends JFrame {
         mainFrame.setVisible(true);
     }
 
+    /** Menu Bar **/
+
     // MODIFIES: this
-    // EFFECTS: constructs the JMenuBar and adds it to the main JFrame
+    // EFFECTS: constructs a menu bar and adds it to the main frame
     public void initializeMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
-        menuBar.add(setFileMenu());
-        menuBar.add(setViewMenu());
+        menuBar.add(getFileMenu());
+        menuBar.add(getViewMenu());
 
         mainFrame.setJMenuBar(menuBar);
     }
 
-    private JMenu setFileMenu() {
+    // EFFECTS: constructs the file menu
+    private JMenu getFileMenu() {
         JMenu fileMenu = new JMenu("File");
 
         JMenuItem saveItem = new JMenuItem("Save");
@@ -126,13 +128,14 @@ public class BudgetRocket extends JFrame {
         return fileMenu;
     }
 
-    private JMenu setViewMenu() {
+    // EFFECTS: constructs the view menu
+    private JMenu getViewMenu() {
         JMenu viewMenu = new JMenu("View");
 
         JMenuItem homeItem =  new JMenuItem("Home");
         JMenuItem budgetItem = new JMenuItem("Budget");
         JMenuItem expensesItem = new JMenuItem("Expenses");
-        JMenuItem incomesItem = new JMenuItem("Incomes");
+        JMenuItem incomesItem = new JMenuItem("Income");
 
         homeItem.setActionCommand("openHome");
         homeItem.addActionListener(new OpenAction());
@@ -161,8 +164,8 @@ public class BudgetRocket extends JFrame {
     public void initializePanels() {
         initializeMainPanel();
         initializeBudgetPanel();
-        initializeExpensesPanel();
-        initializeIncomesPanel();
+        initializeExpenseReportPanel();
+        initializeIncomeReportPanel();
         initializeAddExpensePanel();
         initializeAddIncomePanel();
         initializeModifyExpensePanel();
@@ -184,7 +187,7 @@ public class BudgetRocket extends JFrame {
     // EFFECTS: constructs a JPanel for the budget report
     public void initializeBudgetPanel() {
         JLabel title = new JLabel("Budget Report");
-        title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
+        title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
         title.setForeground(Color.BLACK);
 
         budgetPanel = new JPanel(new BorderLayout());
@@ -193,13 +196,14 @@ public class BudgetRocket extends JFrame {
 
         JPanel infoPanel = new JPanel(new GridLayout(3, 0));
         infoPanel.setBackground(BACKGROUND_COLOR);
-        infoPanel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
-        infoPanel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
-        infoPanel.setForeground(Color.BLACK);
         infoPanel.setPreferredSize(new Dimension(WIDTH, 100));
 
-        expenseInfo = new JLabel(String.format("Total expenses: $%.2f", expenseReport.sum()));
-        incomeInfo = new JLabel(String.format("Total income: $%.2f", incomeReport.sum()));
+        info = new JLabel();
+        info.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+        expenseInfo = new JLabel();
+        expenseInfo.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+        incomeInfo = new JLabel();
+        incomeInfo.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
 
         infoPanel.add(expenseInfo);
         infoPanel.add(incomeInfo);
@@ -213,6 +217,8 @@ public class BudgetRocket extends JFrame {
         budgetPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
+    // MODIFIES: this
+    // EFFECTS: updates the budget panel
     public void updateBudgetPanel() {
         double budgetTotal = budget.getDifference();
         String budgetString = String.format("%.2f", budgetTotal);
@@ -234,9 +240,10 @@ public class BudgetRocket extends JFrame {
         budgetPanel.add(barChart);
     }
 
+    // TODO: remove duplication
     // MODIFIES: this
     // EFFECTS: constructs a JPanel for the expense report
-    public void initializeExpensesPanel() {
+    public void initializeExpenseReportPanel() {
         BorderLayout expensesLayout = new BorderLayout(0, 5);
 
         expensesPanel = new JPanel(expensesLayout);
@@ -258,7 +265,7 @@ public class BudgetRocket extends JFrame {
         listScrollPane.setPreferredSize(new Dimension(100, 100));
         expensesPanel.add(listScrollPane, BorderLayout.CENTER);
 
-        JPanel buttons = setReportButtons("expense");
+        JPanel buttons = getReportButtons("expense");
 
         expensesPanel.add(buttons, BorderLayout.PAGE_END);
         expensesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -266,7 +273,7 @@ public class BudgetRocket extends JFrame {
 
     // MODIFIES: this
     // EFFECTS: constructs a JPanel for the income report
-    public void initializeIncomesPanel() {
+    public void initializeIncomeReportPanel() {
         BorderLayout incomesLayout = new BorderLayout(0, 5);
 
         incomesPanel = new JPanel(incomesLayout);
@@ -288,12 +295,13 @@ public class BudgetRocket extends JFrame {
         listScrollPane.setPreferredSize(new Dimension(100, 100));
         incomesPanel.add(listScrollPane, BorderLayout.CENTER);
 
-        JPanel buttons = setReportButtons("income");
+        JPanel buttons = getReportButtons("income");
 
         incomesPanel.add(buttons, BorderLayout.PAGE_END);
         incomesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
+    // EFFECTS: constructs a JPanel with a title and subtitle for a report panel
     private JPanel getTitlePanel(String title) {
         JLabel titleLabel = new JLabel(title);
         titleLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
@@ -313,7 +321,8 @@ public class BudgetRocket extends JFrame {
         return titlePanel;
     }
 
-    private JPanel setReportButtons(String actionCommand) {
+    // EFFECTS: constructs a JPanel with an add, modify, and delete button for a report panel
+    private JPanel getReportButtons(String actionCommand) {
         JPanel buttons = new JPanel(new GridLayout(0, 3, 2, 0));
         buttons.setBackground(BACKGROUND_COLOR);
 
@@ -340,27 +349,30 @@ public class BudgetRocket extends JFrame {
         return buttons;
     }
 
+    // MODIFIES: this
+    // EFFECTS: constructs a JPanel for adding expenses to the expense report
     public void initializeAddExpensePanel() {
         addExpenseTool = new EntryTool();
         addExpensePanel = new JPanel(new BorderLayout());
         addExpensePanel.setBackground(BACKGROUND_COLOR);
         addExpensePanel.add(initializeEntryPanel(addExpenseTool), BorderLayout.CENTER);
-        addExpensePanel.add(setAddExpenseButtons(), BorderLayout.PAGE_END);
+        addExpensePanel.add(getAddExpenseButtons(), BorderLayout.PAGE_END);
         addExpensePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
+    // MODIFIES: this
+    // EFFECTS: constructs a JPanel for adding incomes to the income report
     public void initializeAddIncomePanel() {
         addIncomeTool = new EntryTool();
         addIncomePanel = new JPanel(new BorderLayout());
         addIncomePanel.setBackground(BACKGROUND_COLOR);
         addIncomePanel.add(initializeEntryPanel(addIncomeTool), BorderLayout.CENTER);
-        addIncomePanel.add(setAddIncomeButtons(), BorderLayout.PAGE_END);
+        addIncomePanel.add(getAddIncomeButtons(), BorderLayout.PAGE_END);
         addIncomePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
-    // MODIFIES: this
-    // EFFECTS:
-    public JPanel initializeEntryPanel(EntryTool addEntryTool) {
+    // EFFECTS: constructs a JPanel for adding entries to a report
+    private JPanel initializeEntryPanel(EntryTool addEntryTool) {
         JPanel addEntryPanel = new JPanel(new GridLayout(5, 2, 10, 10));
         addEntryPanel.setBackground(BACKGROUND_COLOR);
 
@@ -393,19 +405,17 @@ public class BudgetRocket extends JFrame {
         return addEntryPanel;
     }
 
-    public JPanel setAddExpenseButtons() {
+    // EFFECTS: constructs a JPanel with a confirm and cancel button for the add expense panel
+    public JPanel getAddExpenseButtons() {
         JPanel buttons = new JPanel(new GridLayout(0, 2, 10, 0));
         buttons.setBackground(BACKGROUND_COLOR);
 
         JButton confirmButton = new JButton("Confirm");
         confirmButton.addActionListener(new ConfirmAddExpense());
 
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.setActionCommand("openExpenses");
-        cancelButton.addActionListener(new OpenAction());
+        JButton cancelButton = getCancelButton("openExpenses");
 
         confirmButton.setBackground(Color.WHITE);
-        cancelButton.setBackground(Color.WHITE);
 
         buttons.add(confirmButton);
         buttons.add(cancelButton);
@@ -413,19 +423,17 @@ public class BudgetRocket extends JFrame {
         return buttons;
     }
 
-    public JPanel setAddIncomeButtons() {
+    // EFFECTS: constructs a JPanel with a confirm and cancel button for the add income panel
+    private JPanel getAddIncomeButtons() {
         JPanel buttons = new JPanel(new GridLayout(0, 2, 10, 0));
         buttons.setBackground(BACKGROUND_COLOR);
 
         JButton confirmButton = new JButton("Confirm");
         confirmButton.addActionListener(new ConfirmAddIncome());
 
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.setActionCommand("openIncomes");
-        cancelButton.addActionListener(new OpenAction());
+        JButton cancelButton = getCancelButton("openIncomes");
 
         confirmButton.setBackground(Color.WHITE);
-        cancelButton.setBackground(Color.WHITE);
 
         buttons.add(confirmButton);
         buttons.add(cancelButton);
@@ -433,42 +441,44 @@ public class BudgetRocket extends JFrame {
         return buttons;
     }
 
+    // EFFECTS: returns
+    private JButton getCancelButton(String actionCommand) {
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.setActionCommand(actionCommand);
+        cancelButton.addActionListener(new OpenAction());
+        cancelButton.setBackground(Color.WHITE);
+        return cancelButton;
+    }
+
     // MODIFIES: this
-    // EFFECTS:
+    // EFFECTS: constructs a JPanel for modifying an expense in the expense report
     public void initializeModifyExpensePanel() {
         modifyExpenseTool = new EntryTool();
         modifyExpensePanel = new JPanel(new BorderLayout());
         modifyExpensePanel.setBackground(BACKGROUND_COLOR);
         modifyExpensePanel.add(initializeEntryPanel(modifyExpenseTool), BorderLayout.CENTER);
-        modifyExpensePanel.add(setModifyExpenseButtons(), BorderLayout.PAGE_END);
+        modifyExpensePanel.add(getModifyExpenseButtons(), BorderLayout.PAGE_END);
         modifyExpensePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
     // MODIFIES: this
-    // EFFECTS:
+    // EFFECTS: constructs a JPanel for modifying an income in the income report
     public void initializeModifyIncomePanel() {
         modifyIncomeTool = new EntryTool();
         modifyIncomePanel = new JPanel(new BorderLayout());
         modifyIncomePanel.setBackground(BACKGROUND_COLOR);
         modifyIncomePanel.add(initializeEntryPanel(modifyIncomeTool), BorderLayout.CENTER);
-        modifyIncomePanel.add(setModifyIncomeButtons(), BorderLayout.PAGE_END);
+        modifyIncomePanel.add(getModifyIncomeButtons(), BorderLayout.PAGE_END);
         modifyIncomePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
-    public JPanel setModifyExpenseButtons() {
+    // EFFECTS: constructs a JPanel with a confirm and cancel button for the modify expense panel
+    private JPanel getModifyExpenseButtons() {
         JPanel buttons = new JPanel(new GridLayout(0, 2, 10, 0));
         buttons.setBackground(BACKGROUND_COLOR);
 
-        JButton confirmButton = new JButton("Confirm");
-        confirmButton.setActionCommand("expense");
-        confirmButton.addActionListener(new ConfirmModifyAction());
-
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.setActionCommand("openExpenses");
-        cancelButton.addActionListener(new OpenAction());
-
-        confirmButton.setBackground(Color.WHITE);
-        cancelButton.setBackground(Color.WHITE);
+        JButton confirmButton = getConfirmModifyButton("expense");
+        JButton cancelButton = getCancelButton("openExpenses");
 
         buttons.add(confirmButton);
         buttons.add(cancelButton);
@@ -476,25 +486,27 @@ public class BudgetRocket extends JFrame {
         return buttons;
     }
 
-    public JPanel setModifyIncomeButtons() {
+    // EFFECTS: constructs a JPanel with a confirm and cancel button for the modify income panel
+    private JPanel getModifyIncomeButtons() {
         JPanel buttons = new JPanel(new GridLayout(0, 2, 10, 0));
         buttons.setBackground(BACKGROUND_COLOR);
 
-        JButton confirmButton = new JButton("Confirm");
-        confirmButton.setActionCommand("income");
-        confirmButton.addActionListener(new ConfirmModifyAction());
-
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.setActionCommand("openIncomes");
-        cancelButton.addActionListener(new OpenAction());
-
-        confirmButton.setBackground(Color.WHITE);
-        cancelButton.setBackground(Color.WHITE);
+        JButton confirmButton = getConfirmModifyButton("income");
+        JButton cancelButton = getCancelButton("openIncomes");
 
         buttons.add(confirmButton);
         buttons.add(cancelButton);
 
         return buttons;
+    }
+
+    // EFFECTS: constructs a JButton for modifying an entry
+    private JButton getConfirmModifyButton(String actionCommand) {
+        JButton confirmButton = new JButton("Confirm");
+        confirmButton.setActionCommand(actionCommand);
+        confirmButton.addActionListener(new ConfirmModifyAction());
+        confirmButton.setBackground(Color.WHITE);
+        return confirmButton;
     }
 
     // MODIFIES: this
@@ -523,8 +535,11 @@ public class BudgetRocket extends JFrame {
 
     /** ActionListeners for navigation **/
 
+    // Represents the action listener for all menu items in the menu bar
     public class OpenAction implements ActionListener {
 
+        // MODIFIES: this
+        // EFFECTS: changes the current panel in the content pane
         @Override
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
@@ -563,8 +578,12 @@ public class BudgetRocket extends JFrame {
         }
     }
 
+    // TODO: remove duplication
+    // Represents the action listener for the confirm button in the add expense panel
     public class ConfirmAddExpense implements ActionListener {
 
+        // MODIFIES: this
+        // EFFECTS: adds an expense to the expense report
         @Override
         public void actionPerformed(ActionEvent e) {
             String description = addExpenseTool.getDescriptionField().getText();
@@ -580,8 +599,11 @@ public class BudgetRocket extends JFrame {
         }
     }
 
+    // Represents the action listener for the confirm button in the add income panel
     public class ConfirmAddIncome implements ActionListener {
 
+        // MODIFIES: this
+        // EFFECTS: adds an income to the income report
         @Override
         public void actionPerformed(ActionEvent e) {
             String description = addIncomeTool.getDescriptionField().getText();
@@ -597,6 +619,7 @@ public class BudgetRocket extends JFrame {
         }
     }
 
+    // Represents the action listener for the delete button
     public class DeleteAction implements ActionListener {
 
         // MODIFIES: this
@@ -609,23 +632,29 @@ public class BudgetRocket extends JFrame {
                 deleteEntry(incomes, incomesModel, incomeReport);
             }
         }
-    }
 
-    private void deleteEntry(JList<Entry> entries, DefaultListModel<Entry> entryModel, Report report) {
-        int index = entries.getSelectedIndex();
+        // MODIFIES: this
+        // EFFECTS: helper method for deleting entries from a report; outputs a error message if no entry
+        // is selected
+        private void deleteEntry(JList<Entry> entries, DefaultListModel<Entry> entryModel, Report report) {
+            int index = entries.getSelectedIndex();
 
-        if (index != -1) {
-            entryModel.remove(index);
-            Entry entryToDelete = report.getAllEntries().get(index);
-            report.deleteEntry(entryToDelete);
-        } else {
-            JOptionPane.showMessageDialog(mainFrame, "No entry is selected!", "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            if (index != -1) {
+                entryModel.remove(index);
+                Entry entryToDelete = report.getAllEntries().get(index);
+                report.deleteEntry(entryToDelete);
+            } else {
+                JOptionPane.showMessageDialog(mainFrame, "No entry is selected!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
+    // Represents the action listener for the confirm button in a modify entry panel
     public class ConfirmModifyAction implements ActionListener {
 
+        // MODIFIES: this
+        // EFFECTS: modifies an existing entry in the report
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getActionCommand().equals("expense")) {
@@ -636,26 +665,31 @@ public class BudgetRocket extends JFrame {
                 changePanel(incomesPanel);
             }
         }
+
+        // MODIFIES: this
+        // EFFECTS: helper method for modifying entries in the report
+        private void modifyEntry(EntryTool modifyTool, JList<Entry> entries, Report report) {
+            int index = entries.getSelectedIndex();
+
+            String description = modifyTool.getDescriptionField().getText();
+            double amount = ((Number) modifyTool.getAmountField().getValue()).doubleValue();
+            int month = (int) modifyTool.getMonthSpinner().getValue() - 1;
+            int day = (int) modifyTool.getDaySpinner().getValue();
+            int year = (int) modifyTool.getYearSpinner().getValue();
+
+            Entry entryToModify = report.getAllEntries().get(index);
+            entryToModify.setDescription(description);
+            entryToModify.setAmount(amount);
+            entryToModify.setDate(year, month, day);
+        }
     }
 
-    private void modifyEntry(EntryTool modifyTool, JList<Entry> entries, Report report) {
-        int index = entries.getSelectedIndex();
-
-        String description = modifyTool.getDescriptionField().getText();
-        double amount = ((Number) modifyTool.getAmountField().getValue()).doubleValue();
-        int month = (int) modifyTool.getMonthSpinner().getValue() - 1;
-        int day = (int) modifyTool.getDaySpinner().getValue();
-        int year = (int) modifyTool.getYearSpinner().getValue();
-
-        Entry entryToModify = report.getAllEntries().get(index);
-        entryToModify.setDescription(description);
-        entryToModify.setAmount(amount);
-        entryToModify.setDate(year, month, day);
-    }
-
-
+    // TODO: remove duplication
+    // Represents the action listener for the modify button in a report panel
     public class ModifyAction implements ActionListener {
 
+        // MODIFIES: this
+        // EFFECTS:
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getActionCommand().equals("expense")) {
@@ -684,6 +718,7 @@ public class BudgetRocket extends JFrame {
 
     /** ActionListeners for Data Persistence **/
 
+    // Represents the action listener for the save menu item in the file menu
     public class SaveAction implements ActionListener {
 
         // MODIFIES: this
@@ -703,6 +738,7 @@ public class BudgetRocket extends JFrame {
     }
 
 
+    // Represents the action listener for the load menu item in the file menu
     public class LoadAction implements ActionListener {
 
         // MODIFIES: this
@@ -714,6 +750,7 @@ public class BudgetRocket extends JFrame {
                 expenseReport = budget.getExpenseReport();
                 incomeReport = budget.getIncomeReport();
                 updateBudget();
+                updateBudgetPanel();
                 JOptionPane.showMessageDialog(mainFrame, "Budget successfully loaded from " + BUDGET_DATA);
             } catch (IOException exception) {
                 JOptionPane.showMessageDialog(mainFrame, "Unable to load budget from " + BUDGET_DATA,
@@ -721,4 +758,5 @@ public class BudgetRocket extends JFrame {
             }
         }
     }
+
 }
