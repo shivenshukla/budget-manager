@@ -248,6 +248,7 @@ public class BudgetRocket extends JFrame {
         expensesModel = new DefaultListModel<>();
         expenses = new JList<>();
         expenses.setModel(expensesModel);
+        expenses.setFont(new Font(Font.MONOSPACED, Font.BOLD, 15));
 
         expenses.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         expenses.setLayoutOrientation(JList.VERTICAL);
@@ -277,6 +278,7 @@ public class BudgetRocket extends JFrame {
         incomesModel = new DefaultListModel<>();
         incomes = new JList<>();
         incomes.setModel(incomesModel);
+        incomes.setFont(new Font(Font.MONOSPACED, Font.BOLD, 15));
 
         incomes.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         incomes.setLayoutOrientation(JList.VERTICAL);
@@ -300,11 +302,12 @@ public class BudgetRocket extends JFrame {
         JPanel titlePanel = new JPanel(new BorderLayout(0, 2));
         titlePanel.add(titleLabel, BorderLayout.PAGE_START);
 
-        String dateHeader = String.format("%-100s", "Date");
-        String amountHeader = String.format("%-100s", "Amount");
-        String descriptionHeader = String.format("%-100s", "Description");
+        String dateHeader = String.format("%-30s", "Date");
+        String amountHeader = String.format("%-31s", "Amount");
 
-        JLabel header = new JLabel(dateHeader + amountHeader + descriptionHeader);
+        JLabel header = new JLabel(dateHeader + amountHeader + "Description");
+        header.setFont(new Font(Font.MONOSPACED, Font.BOLD, 15));
+
         titlePanel.setBackground(BACKGROUND_COLOR);
         titlePanel.add(header, BorderLayout.PAGE_END);
         return titlePanel;
@@ -610,10 +613,15 @@ public class BudgetRocket extends JFrame {
 
     private void deleteEntry(JList<Entry> entries, DefaultListModel<Entry> entryModel, Report report) {
         int index = entries.getSelectedIndex();
-        entryModel.remove(index);
 
-        Entry entryToDelete = report.getAllEntries().get(index);
-        report.deleteEntry(entryToDelete);
+        if (index != -1) {
+            entryModel.remove(index);
+            Entry entryToDelete = report.getAllEntries().get(index);
+            report.deleteEntry(entryToDelete);
+        } else {
+            JOptionPane.showMessageDialog(mainFrame, "No entry is selected!", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public class ConfirmModifyAction implements ActionListener {
@@ -631,13 +639,13 @@ public class BudgetRocket extends JFrame {
     }
 
     private void modifyEntry(EntryTool modifyTool, JList<Entry> entries, Report report) {
+        int index = entries.getSelectedIndex();
+
         String description = modifyTool.getDescriptionField().getText();
         double amount = ((Number) modifyTool.getAmountField().getValue()).doubleValue();
         int month = (int) modifyTool.getMonthSpinner().getValue() - 1;
         int day = (int) modifyTool.getDaySpinner().getValue();
         int year = (int) modifyTool.getYearSpinner().getValue();
-
-        int index = entries.getSelectedIndex();
 
         Entry entryToModify = report.getAllEntries().get(index);
         entryToModify.setDescription(description);
@@ -652,12 +660,24 @@ public class BudgetRocket extends JFrame {
         public void actionPerformed(ActionEvent e) {
             if (e.getActionCommand().equals("expense")) {
                 int index = expenses.getSelectedIndex();
-                modifyExpenseTool.setAll(expenseReport.getAllEntries().get(index));
-                changePanel(modifyExpensePanel);
+
+                if (index != -1) {
+                    modifyExpenseTool.setAll(expenseReport.getAllEntries().get(index));
+                    changePanel(modifyExpensePanel);
+                } else {
+                    JOptionPane.showMessageDialog(mainFrame, "No entry is selected!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             } else {
                 int index = incomes.getSelectedIndex();
-                modifyIncomeTool.setAll(incomeReport.getAllEntries().get(index));
-                changePanel(modifyIncomePanel);
+
+                if (index != -1) {
+                    modifyIncomeTool.setAll(incomeReport.getAllEntries().get(index));
+                    changePanel(modifyIncomePanel);
+                } else {
+                    JOptionPane.showMessageDialog(mainFrame, "No entry is selected!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }

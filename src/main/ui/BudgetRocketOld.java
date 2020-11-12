@@ -195,7 +195,11 @@ public class BudgetRocketOld {
     // EFFECTS: displays all entries in the given report
     private void displayEntries(Report report) {
         int i = 0;
-        System.out.println("Entry Number\t\tDate of Entry\t\tAmount\t\t\tDescription");
+
+        String dateHeader = String.format("%-30s", "Date of Entry");
+        String amountHeader = String.format("%-31s", "Amount");
+
+        System.out.println("Entry Number\t\t" + dateHeader + amountHeader + "Description");
         for (Entry e : report.getAllEntries()) {
             System.out.printf("%-12d\t\t" + e + "\n", i);
             i++;
