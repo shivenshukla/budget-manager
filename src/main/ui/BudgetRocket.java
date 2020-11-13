@@ -3,8 +3,8 @@ package ui;
 import model.*;
 import persistence.JsonReader;
 import persistence.JsonWriter;
-import ui.tools.BarChart;
-import ui.tools.EntryTool;
+import ui.gui.BarChart;
+import ui.gui.EntryTool;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,12 +19,13 @@ import static java.lang.Math.abs;
 // Represents the GUI of the budget application
 public class BudgetRocket extends JFrame {
     private static final String BUDGET_DATA = "./data/budget.json";
+
     private static final Color BACKGROUND_COLOR = Color.LIGHT_GRAY;
 
-    private static final int X = 500;      // initial x pos of application window
-    private static final int Y = 200;      // initial y pos of application window
-    private static final int WIDTH = 1000; // width of application window
-    private static final int HEIGHT = 700; // height of application window
+    private static final int X = 500;       // initial x pos of application window
+    private static final int Y = 200;       // initial y pos of application window
+    private static final int WIDTH = 1000;  // width of application window
+    private static final int HEIGHT = 700;  // height of application window
 
     private Budget budget;
     private Report expenseReport;
@@ -43,8 +44,6 @@ public class BudgetRocket extends JFrame {
     private JPanel modifyExpensePanel;
     private JPanel modifyIncomePanel;
 
-    private BarChart barChart;
-
     private DefaultListModel<Entry> expensesModel;
     private JList<Entry> expenses;
     private DefaultListModel<Entry> incomesModel;
@@ -55,6 +54,7 @@ public class BudgetRocket extends JFrame {
     private EntryTool modifyExpenseTool;
     private EntryTool modifyIncomeTool;
 
+    private BarChart barChart;
     private JLabel info;
     private JLabel expenseInfo;
     private JLabel incomeInfo;
@@ -254,15 +254,7 @@ public class BudgetRocket extends JFrame {
 
         expensesModel = new DefaultListModel<>();
         expenses = new JList<>();
-        expenses.setModel(expensesModel);
-        expenses.setFont(new Font(Font.MONOSPACED, Font.BOLD, 15));
-
-        expenses.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        expenses.setLayoutOrientation(JList.VERTICAL);
-        expenses.setVisibleRowCount(-1);
-
-        JScrollPane listScrollPane = new JScrollPane(expenses);
-        listScrollPane.setPreferredSize(new Dimension(100, 100));
+        JScrollPane listScrollPane = getJScrollPane(expenses, expensesModel);
         expensesPanel.add(listScrollPane, BorderLayout.CENTER);
 
         JPanel buttons = getReportButtons("expense");
@@ -284,21 +276,27 @@ public class BudgetRocket extends JFrame {
 
         incomesModel = new DefaultListModel<>();
         incomes = new JList<>();
-        incomes.setModel(incomesModel);
-        incomes.setFont(new Font(Font.MONOSPACED, Font.BOLD, 15));
-
-        incomes.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        incomes.setLayoutOrientation(JList.VERTICAL);
-        incomes.setVisibleRowCount(-1);
-
-        JScrollPane listScrollPane = new JScrollPane(incomes);
-        listScrollPane.setPreferredSize(new Dimension(100, 100));
+        JScrollPane listScrollPane = getJScrollPane(incomes, incomesModel);
         incomesPanel.add(listScrollPane, BorderLayout.CENTER);
 
         JPanel buttons = getReportButtons("income");
 
         incomesPanel.add(buttons, BorderLayout.PAGE_END);
         incomesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    }
+
+    // TODO: add specification
+    private JScrollPane getJScrollPane(JList<Entry> entries, DefaultListModel<Entry> entryModel) {
+        entries.setModel(entryModel);
+        entries.setFont(new Font(Font.MONOSPACED, Font.BOLD, 15));
+
+        entries.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        entries.setLayoutOrientation(JList.VERTICAL);
+        entries.setVisibleRowCount(-1);
+
+        JScrollPane listScrollPane = new JScrollPane(entries);
+        listScrollPane.setPreferredSize(new Dimension(100, 100));
+        return listScrollPane;
     }
 
     // EFFECTS: constructs a JPanel with a title and subtitle for a report panel
@@ -533,7 +531,7 @@ public class BudgetRocket extends JFrame {
         }
     }
 
-    /** ActionListeners for navigation **/
+    /** ActionListener for navigation **/
 
     // Represents the action listener for all menu items in the menu bar
     public class OpenAction implements ActionListener {
@@ -633,7 +631,7 @@ public class BudgetRocket extends JFrame {
             }
         }
 
-        // MODIFIES: this
+        // MODIFIES: entries, entryModel, report
         // EFFECTS: helper method for deleting entries from a report; outputs a error message if no entry
         // is selected
         private void deleteEntry(JList<Entry> entries, DefaultListModel<Entry> entryModel, Report report) {
@@ -666,7 +664,7 @@ public class BudgetRocket extends JFrame {
             }
         }
 
-        // MODIFIES: this
+        // MODIFIES: modifyTool, entries, report
         // EFFECTS: helper method for modifying entries in the report
         private void modifyEntry(EntryTool modifyTool, JList<Entry> entries, Report report) {
             int index = entries.getSelectedIndex();
@@ -684,7 +682,7 @@ public class BudgetRocket extends JFrame {
         }
     }
 
-    // TODO: remove duplication
+    // TODO: add specification
     // Represents the action listener for the modify button in a report panel
     public class ModifyAction implements ActionListener {
 
@@ -693,25 +691,21 @@ public class BudgetRocket extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getActionCommand().equals("expense")) {
-                int index = expenses.getSelectedIndex();
-
-                if (index != -1) {
-                    modifyExpenseTool.setAll(expenseReport.getAllEntries().get(index));
-                    changePanel(modifyExpensePanel);
-                } else {
-                    JOptionPane.showMessageDialog(mainFrame, "No entry is selected!", "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                }
+                setModifyPanel(expenses, modifyExpenseTool, expenseReport, modifyExpensePanel);
             } else {
-                int index = incomes.getSelectedIndex();
+                setModifyPanel(incomes, modifyIncomeTool, incomeReport, modifyIncomePanel);
+            }
+        }
 
-                if (index != -1) {
-                    modifyIncomeTool.setAll(incomeReport.getAllEntries().get(index));
-                    changePanel(modifyIncomePanel);
-                } else {
-                    JOptionPane.showMessageDialog(mainFrame, "No entry is selected!", "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                }
+        private void setModifyPanel(JList<Entry> entries, EntryTool modifyTool, Report report, JPanel modifyPanel) {
+            int index = entries.getSelectedIndex();
+
+            if (index != -1) {
+                modifyTool.setAll(report.getAllEntries().get(index));
+                changePanel(modifyPanel);
+            } else {
+                JOptionPane.showMessageDialog(mainFrame, "No entry is selected!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }

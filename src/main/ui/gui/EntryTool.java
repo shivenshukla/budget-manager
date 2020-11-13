@@ -1,4 +1,4 @@
-package ui.tools;
+package ui.gui;
 
 import model.Entry;
 
@@ -44,7 +44,7 @@ public class EntryTool {
     // MODIFIES: this
     // EFFECTS: initializes amountField and descriptionField
     public void initializeFields() {
-        DecimalFormat amountFormat = new DecimalFormat("0.00");
+        DecimalFormat amountFormat = new DecimalFormat("###,##0.00");
         amountField = new JFormattedTextField(amountFormat);
         amountField.setHorizontalAlignment(JTextField.CENTER);
         amountField.setValue(0);
@@ -81,7 +81,6 @@ public class EntryTool {
     }
 
     // Getters
-
     public JSpinner getDaySpinner() {
         return daySpinner;
     }
