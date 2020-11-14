@@ -7,7 +7,7 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-// Represents fields for adding or modifying an entry
+// Represents the JComponents used for user input when adding or modifying an entry
 public class EntryTool {
 
     private JSpinner daySpinner;
@@ -23,7 +23,7 @@ public class EntryTool {
     }
 
     // MODIFIES: this
-    // EFFECTS: initializes all jSpinners
+    // EFFECTS: initializes all JSpinners
     public void initializeSpinners() {
         Calendar currentDate = new GregorianCalendar();
         int currentDay = currentDate.get(Calendar.DAY_OF_MONTH);

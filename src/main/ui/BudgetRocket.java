@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.GregorianCalendar;
 
 import static java.lang.Math.abs;
@@ -20,10 +21,10 @@ import static java.lang.Math.abs;
 public class BudgetRocket extends JFrame {
     private static final String BUDGET_DATA = "./data/budget.json";
 
-    private static final Color BACKGROUND_COLOR = Color.LIGHT_GRAY;
+    private static final Color BACKGROUND_COLOR = new Color(211, 211, 211);
 
-    private static final int X = 500;       // initial x pos of application window
-    private static final int Y = 200;       // initial y pos of application window
+    private static final int X_POS = 500;       // initial x pos of application window
+    private static final int Y_POS = 200;       // initial y pos of application window
     private static final int WIDTH = 1000;  // width of application window
     private static final int HEIGHT = 700;  // height of application window
 
@@ -87,7 +88,7 @@ public class BudgetRocket extends JFrame {
     public void initializeMainFrame() {
         mainFrame = new JFrame("Budget Rocket");
         mainFrame.setLayout(new BorderLayout());
-        mainFrame.setLocation(X, Y);
+        mainFrame.setLocation(X_POS, Y_POS);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         mainFrame.setResizable(false);
@@ -190,7 +191,7 @@ public class BudgetRocket extends JFrame {
         title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
         title.setForeground(Color.BLACK);
 
-        budgetPanel = new JPanel(new BorderLayout());
+        budgetPanel = new JPanel(new BorderLayout(0, 5));
         budgetPanel.setBackground(BACKGROUND_COLOR);
         budgetPanel.add(title, BorderLayout.NORTH);
 
@@ -220,27 +221,32 @@ public class BudgetRocket extends JFrame {
     // MODIFIES: this
     // EFFECTS: updates the budget panel
     public void updateBudgetPanel() {
+        DecimalFormat decimalFormat = new DecimalFormat("###,##0.00");
+
         double budgetTotal = budget.getDifference();
-        String budgetString = String.format("%.2f", budgetTotal);
+        String budgetString = decimalFormat.format(budgetTotal);
+
+        info.setForeground(Color.BLACK);
+        expenseInfo.setForeground(Color.BLACK);
+        incomeInfo.setForeground(Color.BLACK);
 
         if (budget.isSurplus()) {
             info.setText("You have a surplus of $" + budgetString);
         } else if (budget.isDeficit()) {
-            budgetString = String.format("%.2f", abs(budgetTotal));
+            budgetString = decimalFormat.format(abs(budgetTotal));
             info.setText("You have a deficit of $" + budgetString);
         } else {
             info.setText("You have a balance of $" + budgetString);
         }
 
-        expenseInfo.setText(String.format("Total expenses: $%.2f", expenseReport.sum()));
-        incomeInfo.setText(String.format("Total income: $%.2f", incomeReport.sum()));
+        expenseInfo.setText("Total expenses: $" + decimalFormat.format(expenseReport.sum()));
+        incomeInfo.setText("Total income: $" + decimalFormat.format(incomeReport.sum()));
 
         budgetPanel.remove(barChart);
         barChart = new BarChart(expenseReport.sum(), incomeReport.sum());
         budgetPanel.add(barChart);
     }
 
-    // TODO: remove duplication
     // MODIFIES: this
     // EFFECTS: constructs a JPanel for the expense report
     public void initializeExpenseReportPanel() {
@@ -285,7 +291,8 @@ public class BudgetRocket extends JFrame {
         incomesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
-    // TODO: add specification
+    // MODIFIES: entries, entryModel
+    // EFFECTS: returns a JScrollPane for entries
     private JScrollPane getJScrollPane(JList<Entry> entries, DefaultListModel<Entry> entryModel) {
         entries.setModel(entryModel);
         entries.setFont(new Font(Font.MONOSPACED, Font.BOLD, 15));
@@ -348,34 +355,36 @@ public class BudgetRocket extends JFrame {
     }
 
     // MODIFIES: this
-    // EFFECTS: constructs a JPanel for adding expenses to the expense report
+    // EFFECTS: constructs a JPanel for adding an expense to the expense report
     public void initializeAddExpensePanel() {
         addExpenseTool = new EntryTool();
         addExpensePanel = new JPanel(new BorderLayout());
+        addExpensePanel.add(new JLabel("Adding an expense..."), BorderLayout.PAGE_START);
         addExpensePanel.setBackground(BACKGROUND_COLOR);
-        addExpensePanel.add(initializeEntryPanel(addExpenseTool), BorderLayout.CENTER);
+        addExpensePanel.add(getEntryPanel(addExpenseTool), BorderLayout.CENTER);
         addExpensePanel.add(getAddExpenseButtons(), BorderLayout.PAGE_END);
         addExpensePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
     // MODIFIES: this
-    // EFFECTS: constructs a JPanel for adding incomes to the income report
+    // EFFECTS: constructs a JPanel for adding an income to the income report
     public void initializeAddIncomePanel() {
         addIncomeTool = new EntryTool();
         addIncomePanel = new JPanel(new BorderLayout());
+        addIncomePanel.add(new JLabel("Adding an income..."), BorderLayout.PAGE_START);
         addIncomePanel.setBackground(BACKGROUND_COLOR);
-        addIncomePanel.add(initializeEntryPanel(addIncomeTool), BorderLayout.CENTER);
+        addIncomePanel.add(getEntryPanel(addIncomeTool), BorderLayout.CENTER);
         addIncomePanel.add(getAddIncomeButtons(), BorderLayout.PAGE_END);
         addIncomePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
-    // EFFECTS: constructs a JPanel for adding entries to a report
-    private JPanel initializeEntryPanel(EntryTool addEntryTool) {
+    // EFFECTS: constructs a JPanel for adding or modifying entries to a report
+    private JPanel getEntryPanel(EntryTool entryTool) {
         JPanel addEntryPanel = new JPanel(new GridLayout(5, 2, 10, 10));
         addEntryPanel.setBackground(BACKGROUND_COLOR);
 
-        addEntryTool.getAmountField().setValue(0);
-        addEntryTool.getDescriptionField().setText("Enter here");
+        entryTool.getAmountField().setValue(0);
+        entryTool.getDescriptionField().setText("Enter here");
 
         JLabel dayLabel = new JLabel("Day", JLabel.CENTER);
         JLabel monthLabel = new JLabel("Month", JLabel.CENTER);
@@ -384,19 +393,19 @@ public class BudgetRocket extends JFrame {
         JLabel descriptionLabel = new JLabel("Description", JLabel.CENTER);
 
         addEntryPanel.add(dayLabel);
-        addEntryPanel.add(addEntryTool.getDaySpinner());
+        addEntryPanel.add(entryTool.getDaySpinner());
 
         addEntryPanel.add(monthLabel);
-        addEntryPanel.add(addEntryTool.getMonthSpinner());
+        addEntryPanel.add(entryTool.getMonthSpinner());
 
         addEntryPanel.add(yearLabel);
-        addEntryPanel.add(addEntryTool.getYearSpinner());
+        addEntryPanel.add(entryTool.getYearSpinner());
 
         addEntryPanel.add(amountLabel);
-        addEntryPanel.add(addEntryTool.getAmountField());
+        addEntryPanel.add(entryTool.getAmountField());
 
         addEntryPanel.add(descriptionLabel);
-        addEntryPanel.add(addEntryTool.getDescriptionField());
+        addEntryPanel.add(entryTool.getDescriptionField());
 
         addEntryPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
@@ -439,7 +448,7 @@ public class BudgetRocket extends JFrame {
         return buttons;
     }
 
-    // EFFECTS: returns
+    // EFFECTS: constructs a cancel button
     private JButton getCancelButton(String actionCommand) {
         JButton cancelButton = new JButton("Cancel");
         cancelButton.setActionCommand(actionCommand);
@@ -453,8 +462,9 @@ public class BudgetRocket extends JFrame {
     public void initializeModifyExpensePanel() {
         modifyExpenseTool = new EntryTool();
         modifyExpensePanel = new JPanel(new BorderLayout());
+        modifyExpensePanel.add(new JLabel("Modifying an expense..."), BorderLayout.PAGE_START);
         modifyExpensePanel.setBackground(BACKGROUND_COLOR);
-        modifyExpensePanel.add(initializeEntryPanel(modifyExpenseTool), BorderLayout.CENTER);
+        modifyExpensePanel.add(getEntryPanel(modifyExpenseTool), BorderLayout.CENTER);
         modifyExpensePanel.add(getModifyExpenseButtons(), BorderLayout.PAGE_END);
         modifyExpensePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
@@ -464,8 +474,9 @@ public class BudgetRocket extends JFrame {
     public void initializeModifyIncomePanel() {
         modifyIncomeTool = new EntryTool();
         modifyIncomePanel = new JPanel(new BorderLayout());
+        modifyIncomePanel.add(new JLabel("Modifying an income..."), BorderLayout.PAGE_START);
         modifyIncomePanel.setBackground(BACKGROUND_COLOR);
-        modifyIncomePanel.add(initializeEntryPanel(modifyIncomeTool), BorderLayout.CENTER);
+        modifyIncomePanel.add(getEntryPanel(modifyIncomeTool), BorderLayout.CENTER);
         modifyIncomePanel.add(getModifyIncomeButtons(), BorderLayout.PAGE_END);
         modifyIncomePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
@@ -560,10 +571,11 @@ public class BudgetRocket extends JFrame {
 
     /** ActionListeners for entry operations **/
 
+    // Represents the action listener for the add button in a report panel
     public class AddAction implements ActionListener {
 
         // MODIFIES: this
-        // EFFECTS: adds a new entry to the report
+        // EFFECTS: sets the add entry panel corresponding to the action command of e
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getActionCommand().equals("expense")) {
@@ -576,7 +588,6 @@ public class BudgetRocket extends JFrame {
         }
     }
 
-    // TODO: remove duplication
     // Represents the action listener for the confirm button in the add expense panel
     public class ConfirmAddExpense implements ActionListener {
 
@@ -617,6 +628,69 @@ public class BudgetRocket extends JFrame {
         }
     }
 
+    // Represents the action listener for the modify button in a report panel
+    public class ModifyAction implements ActionListener {
+
+        // MODIFIES: this
+        // EFFECTS: sets the modify entry panel corresponding to the action command of e
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getActionCommand().equals("expense")) {
+                setModifyPanel(expenses, modifyExpenseTool, expenseReport, modifyExpensePanel);
+            } else {
+                setModifyPanel(incomes, modifyIncomeTool, incomeReport, modifyIncomePanel);
+            }
+        }
+
+        // MODIFIES: modifyTool, modifyPanel
+        // EFFECTS: sets the modify entry panel; outputs an error message if no entry is selected
+        private void setModifyPanel(JList<Entry> entries, EntryTool modifyTool, Report report, JPanel modifyPanel) {
+            int index = entries.getSelectedIndex();
+
+            if (index != -1) {
+                modifyTool.setAll(report.getAllEntries().get(index));
+                changePanel(modifyPanel);
+            } else {
+                JOptionPane.showMessageDialog(mainFrame, "No entry is selected!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    // Represents the action listener for the confirm button in a modify entry panel
+    public class ConfirmModifyAction implements ActionListener {
+
+        // MODIFIES: this
+        // EFFECTS: modifies an existing entry in the report
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getActionCommand().equals("expense")) {
+                modifyEntry(modifyExpenseTool, expenses, expenseReport);
+                changePanel(expensesPanel);
+            } else {
+                modifyEntry(modifyIncomeTool, incomes, incomeReport);
+                changePanel(incomesPanel);
+            }
+        }
+
+        // MODIFIES: entries, report
+        // EFFECTS: helper method for modifying entries in the report
+        private void modifyEntry(EntryTool modifyTool, JList<Entry> entries, Report report) {
+            int index = entries.getSelectedIndex();
+
+            String description = modifyTool.getDescriptionField().getText();
+            double amount = ((Number) modifyTool.getAmountField().getValue()).doubleValue();
+            int month = (int) modifyTool.getMonthSpinner().getValue() - 1;
+            int day = (int) modifyTool.getDaySpinner().getValue();
+            int year = (int) modifyTool.getYearSpinner().getValue();
+
+            Entry entryToModify = report.getAllEntries().get(index);
+            entryToModify.setDescription(description);
+            entryToModify.setAmount(amount);
+            entryToModify.setDate(year, month, day);
+        }
+    }
+
     // Represents the action listener for the delete button
     public class DeleteAction implements ActionListener {
 
@@ -641,68 +715,6 @@ public class BudgetRocket extends JFrame {
                 entryModel.remove(index);
                 Entry entryToDelete = report.getAllEntries().get(index);
                 report.deleteEntry(entryToDelete);
-            } else {
-                JOptionPane.showMessageDialog(mainFrame, "No entry is selected!", "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-
-    // Represents the action listener for the confirm button in a modify entry panel
-    public class ConfirmModifyAction implements ActionListener {
-
-        // MODIFIES: this
-        // EFFECTS: modifies an existing entry in the report
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (e.getActionCommand().equals("expense")) {
-                modifyEntry(modifyExpenseTool, expenses, expenseReport);
-                changePanel(expensesPanel);
-            } else {
-                modifyEntry(modifyIncomeTool, incomes, incomeReport);
-                changePanel(incomesPanel);
-            }
-        }
-
-        // MODIFIES: modifyTool, entries, report
-        // EFFECTS: helper method for modifying entries in the report
-        private void modifyEntry(EntryTool modifyTool, JList<Entry> entries, Report report) {
-            int index = entries.getSelectedIndex();
-
-            String description = modifyTool.getDescriptionField().getText();
-            double amount = ((Number) modifyTool.getAmountField().getValue()).doubleValue();
-            int month = (int) modifyTool.getMonthSpinner().getValue() - 1;
-            int day = (int) modifyTool.getDaySpinner().getValue();
-            int year = (int) modifyTool.getYearSpinner().getValue();
-
-            Entry entryToModify = report.getAllEntries().get(index);
-            entryToModify.setDescription(description);
-            entryToModify.setAmount(amount);
-            entryToModify.setDate(year, month, day);
-        }
-    }
-
-    // TODO: add specification
-    // Represents the action listener for the modify button in a report panel
-    public class ModifyAction implements ActionListener {
-
-        // MODIFIES: this
-        // EFFECTS:
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (e.getActionCommand().equals("expense")) {
-                setModifyPanel(expenses, modifyExpenseTool, expenseReport, modifyExpensePanel);
-            } else {
-                setModifyPanel(incomes, modifyIncomeTool, incomeReport, modifyIncomePanel);
-            }
-        }
-
-        private void setModifyPanel(JList<Entry> entries, EntryTool modifyTool, Report report, JPanel modifyPanel) {
-            int index = entries.getSelectedIndex();
-
-            if (index != -1) {
-                modifyTool.setAll(report.getAllEntries().get(index));
-                changePanel(modifyPanel);
             } else {
                 JOptionPane.showMessageDialog(mainFrame, "No entry is selected!", "Error",
                         JOptionPane.ERROR_MESSAGE);

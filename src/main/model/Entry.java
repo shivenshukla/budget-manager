@@ -3,6 +3,7 @@ package model;
 import org.json.JSONObject;
 import persistence.Writable;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -60,10 +61,15 @@ public abstract class Entry implements Writable {
     // EFFECTS: Returns a string representation of entry
     @Override
     public String toString() {
+        DecimalFormat decimalFormat = new DecimalFormat("###,##0.00");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd yyyy");
-        String amountStr = String.format("%-30.2f", this.amount);
+
+        String amountStr = decimalFormat.format(this.amount);
+        amountStr = String.format("%-30s", amountStr);
+
         String dateStr = simpleDateFormat.format(this.date.getTime());
         dateStr = String.format("%-30s", dateStr);
+
         return  dateStr + "$" + amountStr + this.description;
     }
 
