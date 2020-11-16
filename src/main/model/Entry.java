@@ -7,9 +7,11 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-// Represents an entry for a report having a description, amount (in dollars), and date of entry
 // Documentation for Calendar: https://docs.oracle.com/javase/7/docs/api/java/util/Calendar.html
+// Documentation for DecimalFormat: https://docs.oracle.com/javase/7/docs/api/java/text/DecimalFormat.html
 // Documentation for SimpleDateFormat: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+
+// Represents an entry for a report having a description, amount (in dollars), and date of entry
 public abstract class Entry implements Writable {
     protected String description;
     protected double amount;

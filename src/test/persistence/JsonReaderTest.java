@@ -10,8 +10,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// Tests for the JsonReader class
 // This code is modeled on the JsonReaderTest class from https://github.com/stleary/JSON-java
+
+// Tests for the JsonReader class
 public class JsonReaderTest extends JsonTest{
     private Budget testBudget;
     private JsonReader reader;

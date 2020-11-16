@@ -12,8 +12,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// Tests for the JsonWriter class
 // This code is modeled on the JsonWriterTest class from https://github.com/stleary/JSON-java
+
+// Tests for the JsonWriter class
 public class JsonWriterTest extends JsonTest {
     private Budget testBudget;
     private JsonWriter writer;

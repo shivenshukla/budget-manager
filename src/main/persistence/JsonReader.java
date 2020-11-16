@@ -14,8 +14,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.stream.Stream;
 
-// Represents a reader that reads budget from JSON data stored in file
 // This code is modeled on the JsonReader class from https://github.com/stleary/JSON-java
+
+// Represents a reader that reads budget from JSON data stored in file
 public class JsonReader {
     private String source;
 

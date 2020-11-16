@@ -7,8 +7,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-// Represents a writer that writes a JSON representation of budget to a file
 // This code is modeled on the JsonWriter class from https://github.com/stleary/JSON-java
+
+// Represents a writer that writes a JSON representation of budget to a file
 public class JsonWriter {
     private static final int TAB = 3;
     PrintWriter writer;

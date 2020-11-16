@@ -17,14 +17,30 @@ import java.util.GregorianCalendar;
 
 import static java.lang.Math.abs;
 
+// I learned to create this code from reading the following pages on
+// https://docs.oracle.com/javase/tutorial/uiswing/components/componentlist.html
+//  - How to Use Buttons, Check Boxes, and Radio Buttons
+//  - How to Make Dialogs
+//  - How to Make Frames (Main Windows)
+//  - How to Use Labels
+//  - How to Use Lists
+//  - How to Use Menus
+//  - How to Use Panels
+//  - How to Use Root Panes
+//  - How to Use Scroll Panes
+
+// Code related to event handling was learned from the reading the example given on the
+// Phase 3 instructions page on edX edge; the example was taken from a StackOverflow post
+// https://stackoverflow.com/questions/6578205/swing-jlabel-text-change-on-the-running-application
+
 // Represents the GUI of the budget application
 public class BudgetRocket extends JFrame {
     private static final String BUDGET_DATA = "./data/budget.json";
 
     private static final Color BACKGROUND_COLOR = new Color(211, 211, 211);
 
-    private static final int X_POS = 500;       // initial x pos of application window
-    private static final int Y_POS = 200;       // initial y pos of application window
+    private static final int X_POS = 500;   // initial x pos of application window
+    private static final int Y_POS = 200;   // initial y pos of application window
     private static final int WIDTH = 1000;  // width of application window
     private static final int HEIGHT = 700;  // height of application window
 

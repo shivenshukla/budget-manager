@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.text.DecimalFormat;
 
+// Documentation for Graphics: https://docs.oracle.com/javase/7/docs/api/java/awt/Graphics.html
+
 // Represents a bar chart
 public class BarChart extends JPanel {
     // bar constants

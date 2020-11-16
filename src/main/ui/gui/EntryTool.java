@@ -7,6 +7,11 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+// I learned to create this code from reading the following pages on
+// https://docs.oracle.com/javase/tutorial/uiswing/components/componentlist.html
+//  - How to Use Spinners
+//  - How to Use Text Fields
+
 // Represents the JComponents used for user input when adding or modifying an entry
 public class EntryTool {
 
