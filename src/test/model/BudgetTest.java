@@ -1,5 +1,7 @@
 package model;
 
+import exception.EmptyStringException;
+import exception.NegativeInputException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -45,97 +47,135 @@ public class BudgetTest {
 
     @Test
     void testAddExpense() {
-        testExpense = new Expense(DESCRIPTION_2, AMOUNT_2, date2);
+        try {
+            testExpense = new Expense(DESCRIPTION_2, AMOUNT_2, date2);
 
-        Report otherExpenseReport = testBudget.getExpenseReport();
-        Report otherIncomeReport = testBudget.getIncomeReport();
+            Report otherExpenseReport = testBudget.getExpenseReport();
+            Report otherIncomeReport = testBudget.getIncomeReport();
 
-        assertEquals(0, otherExpenseReport.size());
-        assertEquals(0, otherIncomeReport.size());
+            assertEquals(0, otherExpenseReport.size());
+            assertEquals(0, otherIncomeReport.size());
 
-        testBudget.addExpense(testExpense);
+            testBudget.addExpense(testExpense);
 
-        assertEquals(1, otherExpenseReport.size());
-        assertEquals(0, otherIncomeReport.size());
+            assertEquals(1, otherExpenseReport.size());
+            assertEquals(0, otherIncomeReport.size());
 
-        assertTrue(otherExpenseReport.contains(testExpense));
-        assertFalse(otherIncomeReport.contains(testExpense));
+            assertTrue(otherExpenseReport.contains(testExpense));
+            assertFalse(otherIncomeReport.contains(testExpense));
+        } catch (NegativeInputException e) {
+            fail("NegativeInputException should have not been thrown");
+        } catch (EmptyStringException e) {
+            fail("EmptyStringException should have not been thrown");
+        }
     }
 
     @Test
     void testAddIncome() {
-        testIncome = new Income(DESCRIPTION_1, AMOUNT_1, date1);
+        try {
+            testIncome = new Income(DESCRIPTION_1, AMOUNT_1, date1);
 
-        Report otherExpenseReport = testBudget.getExpenseReport();
-        Report otherIncomeReport = testBudget.getIncomeReport();
+            Report otherExpenseReport = testBudget.getExpenseReport();
+            Report otherIncomeReport = testBudget.getIncomeReport();
 
-        assertEquals(0, otherExpenseReport.size());
-        assertEquals(0, otherIncomeReport.size());
+            assertEquals(0, otherExpenseReport.size());
+            assertEquals(0, otherIncomeReport.size());
 
-        testBudget.addIncome(testIncome);
+            testBudget.addIncome(testIncome);
 
-        assertEquals(0, otherExpenseReport.size());
-        assertEquals(1, otherIncomeReport.size());
+            assertEquals(0, otherExpenseReport.size());
+            assertEquals(1, otherIncomeReport.size());
 
-        assertFalse(otherExpenseReport.contains(testIncome));
-        assertTrue(otherIncomeReport.contains(testIncome));
+            assertFalse(otherExpenseReport.contains(testIncome));
+            assertTrue(otherIncomeReport.contains(testIncome));
+        } catch (NegativeInputException e) {
+            fail("NegativeInputException should not have been thrown");
+        } catch (EmptyStringException e) {
+            fail("EmptyStringException should not have been thrown");
+        }
     }
 
     @Test
     void testIsSurplus() {
-        testExpense = new Expense(DESCRIPTION_2, AMOUNT_2, date2);
-        testIncome = new Income(DESCRIPTION_1, AMOUNT_1, date1);
+        try {
+            testExpense = new Expense(DESCRIPTION_2, AMOUNT_2, date2);
+            testIncome = new Income(DESCRIPTION_1, AMOUNT_1, date1);
 
-        addEntries(testExpense, testIncome);
-
-        assertTrue(testBudget.isSurplus());
+            addEntries(testExpense, testIncome);
+            assertTrue(testBudget.isSurplus());
+        } catch (NegativeInputException e) {
+            fail("NegativeInputException should not have been thrown");
+        } catch (EmptyStringException e) {
+            fail("EmptyStringException should not have been thrown");
+        }
     }
 
     @Test
     void testIsSurplusZeroCase() {
-        testExpense = new Expense(DESCRIPTION_1, AMOUNT_1, date2);
-        testIncome = new Income(DESCRIPTION_2, AMOUNT_1, date1);
+        try {
+            testExpense = new Expense(DESCRIPTION_1, AMOUNT_1, date2);
+            testIncome = new Income(DESCRIPTION_2, AMOUNT_1, date1);
 
-        addEntries(testExpense, testIncome);
-
-        assertFalse(testBudget.isSurplus());
+            addEntries(testExpense, testIncome);
+            assertFalse(testBudget.isSurplus());
+        } catch (NegativeInputException e) {
+            fail("NegativeInputException should not have been thrown");
+        } catch (EmptyStringException e) {
+            fail("EmptyStringException should not have been thrown");
+        }
     }
 
     @Test
     void testIsDeficit() {
-        testExpense = new Expense(DESCRIPTION_1, AMOUNT_1, date1);
-        testIncome = new Income(DESCRIPTION_2, AMOUNT_2, date2);
+        try {
+            testExpense = new Expense(DESCRIPTION_1, AMOUNT_1, date1);
+            testIncome = new Income(DESCRIPTION_2, AMOUNT_2, date2);
 
-        addEntries(testExpense, testIncome);
-
-        assertTrue(testBudget.isDeficit());
+            addEntries(testExpense, testIncome);
+            assertTrue(testBudget.isDeficit());
+        } catch (NegativeInputException e) {
+            fail("NegativeInputException should not have been thrown");
+        } catch (EmptyStringException e) {
+            fail("EmptyStringException should not have been thrown");
+        }
     }
 
     @Test
     void testIsDeficitZeroCase() {
-        testExpense = new Expense(DESCRIPTION_1, AMOUNT_1, date2);
-        testIncome = new Income(DESCRIPTION_2, AMOUNT_1, date1);
+        try {
+            testExpense = new Expense(DESCRIPTION_1, AMOUNT_1, date2);
+            testIncome = new Income(DESCRIPTION_2, AMOUNT_1, date1);
 
-        addEntries(testExpense, testIncome);
-
-        assertFalse(testBudget.isDeficit());
+            addEntries(testExpense, testIncome);
+            assertFalse(testBudget.isDeficit());
+        } catch (NegativeInputException e) {
+            fail("NegativeInputException should not have been thrown");
+        } catch (EmptyStringException e) {
+            fail("EmptyStringException should not have been thrown");
+        }
     }
 
     @Test
     void testGetters() {
-        testExpense = new Expense(DESCRIPTION_2, AMOUNT_2, date2);
-        testIncome = new Income(DESCRIPTION_1, AMOUNT_1, date1);
+        try {
+            testExpense = new Expense(DESCRIPTION_2, AMOUNT_2, date2);
+            testIncome = new Income(DESCRIPTION_1, AMOUNT_1, date1);
 
-        addEntries(testExpense, testIncome);
+            addEntries(testExpense, testIncome);
 
-        Report otherExpenseReport = testBudget.getExpenseReport();
-        Report otherIncomeReport = testBudget.getIncomeReport();
+            Report otherExpenseReport = testBudget.getExpenseReport();
+            Report otherIncomeReport = testBudget.getIncomeReport();
 
-        assertEquals(1, otherExpenseReport.size());
-        assertEquals(1, otherIncomeReport.size());
+            assertEquals(1, otherExpenseReport.size());
+            assertEquals(1, otherIncomeReport.size());
 
-        assertTrue(otherExpenseReport.contains(testExpense));
-        assertTrue(otherIncomeReport.contains(testIncome));
+            assertTrue(otherExpenseReport.contains(testExpense));
+            assertTrue(otherIncomeReport.contains(testIncome));
+        } catch (NegativeInputException e) {
+            fail("NegativeInputException should not have been thrown");
+        } catch (EmptyStringException e) {
+            fail("EmptyStringException should not have been thrown");
+        }
     }
 
     // MODIFIES: this

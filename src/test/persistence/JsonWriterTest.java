@@ -1,5 +1,7 @@
 package persistence;
 
+import exception.EmptyStringException;
+import exception.NegativeInputException;
 import model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -143,29 +145,41 @@ public class JsonWriterTest extends JsonTest {
         Calendar date2 = new GregorianCalendar(1995, Calendar.MARCH, 14);
         Calendar date3 = new GregorianCalendar(2008, Calendar.JUNE, 30);
 
-        Expense expense1 = new Expense("test expense 1", 100, date1);
-        Expense expense2 = new Expense("test expense 2", 1234.56, date2);
-        Expense expense3 = new Expense("test expense 3", 1.50, date3);
+        try {
+            Expense expense1 = new Expense("test expense 1", 100, date1);
+            Expense expense2 = new Expense("test expense 2", 1234.56, date2);
+            Expense expense3 = new Expense("test expense 3", 1.50, date3);
 
-        testBudget.addExpense(expense1);
-        testBudget.addExpense(expense2);
-        testBudget.addExpense(expense3);
+            testBudget.addExpense(expense1);
+            testBudget.addExpense(expense2);
+            testBudget.addExpense(expense3);
+        } catch (NegativeInputException e) {
+            fail("NegativeInputException should have not been thrown");
+        } catch (EmptyStringException e) {
+            fail("EmptyStringException should have not been thrown");
+        }
     }
 
     // MODIFIES: this
     // EFFECTS: adds incomes to testBudget
     private void addIncomes() {
-        Calendar date1 = new GregorianCalendar(2019, Calendar.SEPTEMBER, 29);
-        Calendar date2 = new GregorianCalendar(2020, Calendar.MARCH, 1);
-        Calendar date3 = new GregorianCalendar(2001, Calendar.NOVEMBER, 20);
+        try {
+            Calendar date1 = new GregorianCalendar(2019, Calendar.SEPTEMBER, 29);
+            Calendar date2 = new GregorianCalendar(2020, Calendar.MARCH, 1);
+            Calendar date3 = new GregorianCalendar(2001, Calendar.NOVEMBER, 20);
 
-        Income income1 = new Income("test income 1", 14100, date1);
-        Income income2 = new Income("test income 2", 2000.00, date2);
-        Income income3 = new Income("test income 3", 340.00, date3);
+            Income income1 = new Income("test income 1", 14100, date1);
+            Income income2 = new Income("test income 2", 2000.00, date2);
+            Income income3 = new Income("test income 3", 340.00, date3);
 
-        testBudget.addIncome(income1);
-        testBudget.addIncome(income2);
-        testBudget.addIncome(income3);
+            testBudget.addIncome(income1);
+            testBudget.addIncome(income2);
+            testBudget.addIncome(income3);
+        } catch (NegativeInputException e) {
+            fail("NegativeInputException should have not been thrown");
+        } catch (EmptyStringException e) {
+            fail("EmptyStringException should have not been thrown");
+        }
     }
 
     // REQUIRES: expenseReport has at least 3 entries

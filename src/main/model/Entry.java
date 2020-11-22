@@ -1,5 +1,7 @@
 package model;
 
+import exception.EmptyStringException;
+import exception.NegativeInputException;
 import org.json.JSONObject;
 import persistence.Writable;
 
@@ -17,20 +19,33 @@ public abstract class Entry implements Writable {
     protected double amount;
     protected Calendar date;
 
-    // REQUIRES: description has non-zero length and amount >= 0
-    // EFFECTS: constructs an entry with given description, amount (in dollars) and date of entry
-    public Entry(String description, double amount, Calendar date) {
+    // EFFECTS: constructs an entry with given description, amount (in dollars) and date of entry;
+    //          throws NegativeInputException if amount is negative;
+    //          throws EmptyStringException if description is an empty string
+    public Entry(String description, double amount, Calendar date) throws EmptyStringException, NegativeInputException {
+        if (description.isEmpty()) {
+            throw  new EmptyStringException();
+        } else if (amount < 0) {
+            throw  new NegativeInputException();
+        }
         this.description = description;
         this.amount = amount;
         this.date = date;
     }
 
     // Setters
-    public void setDescription(String description) {
+
+    public void setDescription(String description) throws EmptyStringException {
+        if (description.isEmpty()) {
+            throw new EmptyStringException();
+        }
         this.description = description;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(double amount) throws NegativeInputException {
+        if (amount < 0) {
+            throw new NegativeInputException();
+        }
         this.amount = amount;
     }
 

@@ -79,23 +79,31 @@ public class JsonReader {
     // MODIFIES: budget
     // EFFECTS: parses expense from JSON object and adds it to budget
     public void addExpense(Budget budget, JSONObject jsonObject) {
-        String description = jsonObject.getString("description");
-        double amount = jsonObject.getDouble("amount");
-        Calendar date = getDate(jsonObject);
+        try {
+            String description = jsonObject.getString("description");
+            double amount = jsonObject.getDouble("amount");
+            Calendar date = getDate(jsonObject);
 
-        Expense expense = new Expense(description, amount, date);
-        budget.addExpense(expense);
+            Expense expense = new Expense(description, amount, date);
+            budget.addExpense(expense);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // MODIFIES: budget
     // EFFECTS: parses income from JSON object and adds it to budget
     public void addIncome(Budget budget, JSONObject jsonObject) {
-        String description = jsonObject.getString("description");
-        double amount = jsonObject.getDouble("amount");
-        Calendar date = getDate(jsonObject);
+        try {
+            String description = jsonObject.getString("description");
+            double amount = jsonObject.getDouble("amount");
+            Calendar date = getDate(jsonObject);
 
-        Income income = new Income(description, amount, date);
-        budget.addIncome(income);
+            Income income = new Income(description, amount, date);
+            budget.addIncome(income);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // EFFECTS: parses date from JSON object and returns it
@@ -106,8 +114,6 @@ public class JsonReader {
         int month = jsonDate.getInt("month");
         int day = jsonDate.getInt("day");
 
-        Calendar date = new GregorianCalendar(year, month, day);
-
-        return date;
+        return new GregorianCalendar(year, month, day);
     }
 }

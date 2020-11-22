@@ -1,5 +1,7 @@
 package ui;
 
+import exception.EmptyStringException;
+import exception.NegativeInputException;
 import model.*;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -68,7 +70,9 @@ public class BudgetRocketOld {
         jsonReader = new JsonReader(BUDGET_DATA);
     }
 
-    /** methods for processing user command **/
+    /**
+     * methods for processing user command
+     **/
 
     // MODIFIES: this
     // EFFECTS: processes user command for main menu
@@ -116,7 +120,9 @@ public class BudgetRocketOld {
         }
     }
 
-    /** methods for viewing reports in budget **/
+    /**
+     * methods for viewing reports in budget
+     **/
 
     // EFFECTS: displays the budget report
     private void viewBudgetReport() {
@@ -206,7 +212,9 @@ public class BudgetRocketOld {
         }
     }
 
-    /** methods for displaying menus to user **/
+    /**
+     * methods for displaying menus to user
+     **/
 
     // EFFECTS: displays the main menu of options to the user
     private void displayMainMenu() {
@@ -237,44 +245,52 @@ public class BudgetRocketOld {
         System.out.println("\td -> description");
     }
 
-    /** methods for doing operations **/
+    /**
+     * methods for doing operations
+     **/
 
     // MODIFIES: this
     // EFFECTS: adds a new income to the incomeReport, if amount >= 0
     private void addIncome() {
-        double amount;
-        System.out.print("Enter the amount: ");
-        amount = input.nextDouble();
-        if (amount < 0) {
-            System.out.println("The amount cannot be negative. No new entry was added.");
-        } else {
+        try {
+            System.out.print("Enter the amount: ");
+            double amount = input.nextDouble();
+
             System.out.print("Enter the description: ");
             String description = inputSentence.next();
             Calendar date = makeDate();
 
             Income i = new Income(description, amount, date);
             budget.addIncome(i);
+        } catch (NegativeInputException e) {
+            System.out.println("The amount cannot be negative. No new entry was added.");
+        } catch (EmptyStringException e) {
+            System.out.println("The description cannot be empty. No new entry was added.");
+        } finally {
+            System.out.println();
         }
-        System.out.println();
     }
 
     // MODIFIES: this
     // EFFECTS: adds a new expense to the expenseReport, if amount >= 0
     private void addExpense() {
-        double amount;
-        System.out.print("Enter the amount: ");
-        amount = input.nextDouble();
-        if (amount < 0) {
-            System.out.println("The amount cannot be negative. No new entry was added.");
-        } else {
+        try {
+            System.out.print("Enter the amount: ");
+            double amount = input.nextDouble();
+
             System.out.print("Enter the description: ");
             String description = inputSentence.next();
             Calendar date = makeDate();
 
             Expense e = new Expense(description, amount, date);
             budget.addExpense(e);
+        } catch (NegativeInputException e) {
+            System.out.println("The amount cannot be negative. No new entry was added.");
+        } catch (EmptyStringException e) {
+            System.out.println("The description cannot be empty. No new entry was added.");
+        } finally {
+            System.out.println();
         }
-        System.out.println();
     }
 
     // MODIFIES: this
@@ -328,8 +344,6 @@ public class BudgetRocketOld {
                 command.toLowerCase();
 
                 doModification(command, entryToModify);
-
-                System.out.println("The entry has been modified.");
             }
         }
         System.out.println();
@@ -339,25 +353,22 @@ public class BudgetRocketOld {
     // EFFECTS: processes user command and modifies the given entry
     private void doModification(String command, Entry entry) {
         if (command.equals("e")) {
-            Calendar date = makeDate();
-            entry.setDate(date);
+            modifyDate(entry);
         } else if (command.equals("a")) {
-            System.out.print("Enter the amount: ");
-            double amount = input.nextDouble();
-
-            if (amount < 0) {
-                System.out.println("The amount cannot be negative. The entry was not modified\n");
-            } else {
-                entry.setAmount(amount);
-            }
+            modifyAmount(entry);
         } else if (command.equals("d")) {
-            System.out.print("Enter the description: ");
-            String description = inputSentence.next();
-
-            entry.setDescription(description);
+            modifyDescription(entry);
         } else {
             System.out.println("Uh Oh! You have entered an invalid input...\n");
         }
+    }
+
+    // MODIFIES: this, entry
+    // EFFECTS: modifies the date of the given entry
+    private void modifyDate(Entry entry) {
+        Calendar date = makeDate();
+        entry.setDate(date);
+        System.out.println("The entry was modified");
     }
 
     // EFFECTS: processes user input and returns a new date
@@ -372,7 +383,37 @@ public class BudgetRocketOld {
         return new GregorianCalendar(year, month, day);
     }
 
-    /** methods for data persistence **/
+    // MODIFIES: this, entry
+    // EFFECTS: modifies the amount of the given entry if the inputted amount >= 0;
+    //          otherwise prints an error message
+    private void modifyAmount(Entry entry) {
+        try {
+            System.out.print("Enter the amount: ");
+            double amount = input.nextDouble();
+            entry.setAmount(amount);
+            System.out.println("The entry was modified");
+        } catch (NegativeInputException e) {
+            System.out.println("The amount cannot be negative. The entry was not modified\n");
+        }
+    }
+
+    // MODIFIES: this, entry
+    // EFFECTS: modifies the description of the given entry if the inputted description is not an empty string;
+    //          otherwise prints an error message
+    private void modifyDescription(Entry entry) {
+        try {
+            System.out.print("Enter the description: ");
+            String description = inputSentence.next();
+            entry.setDescription(description);
+            System.out.println("The entry was modified");
+        } catch (EmptyStringException e) {
+            System.out.println("The description cannot be empty. The entry was not modified\n");
+        }
+    }
+
+    /**
+     * methods for data persistence
+     **/
 
     // MODIFIES: this
     // EFFECTS: saves budget to file

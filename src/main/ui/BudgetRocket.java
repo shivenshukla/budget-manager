@@ -1,5 +1,7 @@
 package ui;
 
+import exception.EmptyStringException;
+import exception.NegativeInputException;
 import model.*;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -97,7 +99,9 @@ public class BudgetRocket extends JFrame {
         jsonWriter = new JsonWriter(BUDGET_DATA);
     }
 
-    /** Main frame **/
+    /**
+     * Main frame
+     **/
 
     // MODIFIES: this
     // EFFECTS: constructs the main frame
@@ -116,7 +120,9 @@ public class BudgetRocket extends JFrame {
         mainFrame.setVisible(true);
     }
 
-    /** Menu Bar **/
+    /**
+     * Menu Bar
+     **/
 
     // MODIFIES: this
     // EFFECTS: constructs a menu bar and adds it to the main frame
@@ -149,7 +155,7 @@ public class BudgetRocket extends JFrame {
     private JMenu getViewMenu() {
         JMenu viewMenu = new JMenu("View");
 
-        JMenuItem homeItem =  new JMenuItem("Home");
+        JMenuItem homeItem = new JMenuItem("Home");
         JMenuItem budgetItem = new JMenuItem("Budget");
         JMenuItem expensesItem = new JMenuItem("Expenses");
         JMenuItem incomesItem = new JMenuItem("Income");
@@ -174,7 +180,9 @@ public class BudgetRocket extends JFrame {
         return viewMenu;
     }
 
-    /** Panels **/
+    /**
+     * Panels
+     **/
 
     // MODIFIES: this
     // EFFECTS: constructs all relevant JPanels
@@ -549,16 +557,18 @@ public class BudgetRocket extends JFrame {
         expensesModel.clear();
         incomesModel.clear();
 
-        for (Entry e: expenseReport.getAllEntries()) {
+        for (Entry e : expenseReport.getAllEntries()) {
             expensesModel.addElement(e);
         }
 
-        for (Entry i: incomeReport.getAllEntries()) {
+        for (Entry i : incomeReport.getAllEntries()) {
             incomesModel.addElement(i);
         }
     }
 
-    /** ActionListener for navigation **/
+    /**
+     * ActionListener for navigation
+     **/
 
     // Represents the action listener for all menu items in the menu bar
     public class OpenAction implements ActionListener {
@@ -585,7 +595,9 @@ public class BudgetRocket extends JFrame {
         }
     }
 
-    /** ActionListeners for entry operations **/
+    /**
+     * ActionListeners for entry operations
+     **/
 
     // Represents the action listener for the add button in a report panel
     public class AddAction implements ActionListener {
@@ -611,16 +623,24 @@ public class BudgetRocket extends JFrame {
         // EFFECTS: adds an expense to the expense report
         @Override
         public void actionPerformed(ActionEvent e) {
-            String description = addExpenseTool.getDescriptionField().getText();
-            double amount = ((Number) addExpenseTool.getAmountField().getValue()).doubleValue();
-            int month = (int) addExpenseTool.getMonthSpinner().getValue() - 1;
-            int day = (int) addExpenseTool.getDaySpinner().getValue();
-            int year = (int) addExpenseTool.getYearSpinner().getValue();
+            try {
+                String description = addExpenseTool.getDescriptionField().getText();
+                double amount = ((Number) addExpenseTool.getAmountField().getValue()).doubleValue();
+                int month = (int) addExpenseTool.getMonthSpinner().getValue() - 1;
+                int day = (int) addExpenseTool.getDaySpinner().getValue();
+                int year = (int) addExpenseTool.getYearSpinner().getValue();
 
-            Expense expense = new Expense(description, amount, new GregorianCalendar(year, month, day));
-            budget.addExpense(expense);
-            expensesModel.addElement(expense);
-            changePanel(expensesPanel);
+                Expense expense = new Expense(description, amount, new GregorianCalendar(year, month, day));
+
+                budget.addExpense(expense);
+                expensesModel.addElement(expense);
+
+                changePanel(expensesPanel);
+            } catch (NegativeInputException exception) {
+                printErrorMessage("The amount cannot be negative.");
+            } catch (EmptyStringException exception) {
+                printErrorMessage("The description cannot be empty.");
+            }
         }
     }
 
@@ -631,16 +651,24 @@ public class BudgetRocket extends JFrame {
         // EFFECTS: adds an income to the income report
         @Override
         public void actionPerformed(ActionEvent e) {
-            String description = addIncomeTool.getDescriptionField().getText();
-            double amount = ((Number) addIncomeTool.getAmountField().getValue()).doubleValue();
-            int month = (int) addIncomeTool.getMonthSpinner().getValue() - 1;
-            int day = (int) addIncomeTool.getDaySpinner().getValue();
-            int year = (int) addIncomeTool.getYearSpinner().getValue();
+            try {
+                String description = addIncomeTool.getDescriptionField().getText();
+                double amount = ((Number) addIncomeTool.getAmountField().getValue()).doubleValue();
+                int month = (int) addIncomeTool.getMonthSpinner().getValue() - 1;
+                int day = (int) addIncomeTool.getDaySpinner().getValue();
+                int year = (int) addIncomeTool.getYearSpinner().getValue();
 
-            Income income = new Income(description, amount, new GregorianCalendar(year, month, day));
-            budget.addIncome(income);
-            incomesModel.addElement(income);
-            changePanel(incomesPanel);
+                Income income = new Income(description, amount, new GregorianCalendar(year, month, day));
+
+                budget.addIncome(income);
+                incomesModel.addElement(income);
+
+                changePanel(incomesPanel);
+            } catch (NegativeInputException exception) {
+                printErrorMessage("The amount cannot be negative.");
+            } catch (EmptyStringException exception) {
+                printErrorMessage("The description cannot be empty.");
+            }
         }
     }
 
@@ -667,8 +695,7 @@ public class BudgetRocket extends JFrame {
                 modifyTool.setAll(report.getAllEntries().get(index));
                 changePanel(modifyPanel);
             } else {
-                JOptionPane.showMessageDialog(mainFrame, "No entry is selected!", "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                printErrorMessage("No entry is selected!");
             }
         }
     }
@@ -681,29 +708,35 @@ public class BudgetRocket extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getActionCommand().equals("expense")) {
-                modifyEntry(modifyExpenseTool, expenses, expenseReport);
-                changePanel(expensesPanel);
+                modifyEntry(modifyExpenseTool, expenses, expenseReport, expensesPanel);
             } else {
-                modifyEntry(modifyIncomeTool, incomes, incomeReport);
-                changePanel(incomesPanel);
+                modifyEntry(modifyIncomeTool, incomes, incomeReport, incomesPanel);
             }
         }
 
         // MODIFIES: entries, report
         // EFFECTS: helper method for modifying entries in the report
-        private void modifyEntry(EntryTool modifyTool, JList<Entry> entries, Report report) {
-            int index = entries.getSelectedIndex();
+        private void modifyEntry(EntryTool modifyTool, JList<Entry> entries, Report report, JPanel entriesPanel) {
+            try {
+                int index = entries.getSelectedIndex();
 
-            String description = modifyTool.getDescriptionField().getText();
-            double amount = ((Number) modifyTool.getAmountField().getValue()).doubleValue();
-            int month = (int) modifyTool.getMonthSpinner().getValue() - 1;
-            int day = (int) modifyTool.getDaySpinner().getValue();
-            int year = (int) modifyTool.getYearSpinner().getValue();
+                String description = modifyTool.getDescriptionField().getText();
+                double amount = ((Number) modifyTool.getAmountField().getValue()).doubleValue();
+                int month = (int) modifyTool.getMonthSpinner().getValue() - 1;
+                int day = (int) modifyTool.getDaySpinner().getValue();
+                int year = (int) modifyTool.getYearSpinner().getValue();
 
-            Entry entryToModify = report.getAllEntries().get(index);
-            entryToModify.setDescription(description);
-            entryToModify.setAmount(amount);
-            entryToModify.setDate(year, month, day);
+                Entry entryToModify = report.getAllEntries().get(index);
+
+                entryToModify.setDescription(description);
+                entryToModify.setAmount(amount);
+                entryToModify.setDate(year, month, day);
+                changePanel(entriesPanel);
+            } catch (NegativeInputException exception) {
+                printErrorMessage("The amount cannot be negative.");
+            } catch (EmptyStringException exception) {
+                printErrorMessage("The description cannot be empty.");
+            }
         }
     }
 
@@ -732,13 +765,14 @@ public class BudgetRocket extends JFrame {
                 Entry entryToDelete = report.getAllEntries().get(index);
                 report.deleteEntry(entryToDelete);
             } else {
-                JOptionPane.showMessageDialog(mainFrame, "No entry is selected!", "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                printErrorMessage("No entry is selected!");
             }
         }
     }
 
-    /** ActionListeners for Data Persistence **/
+    /**
+     * ActionListeners for Data Persistence
+     **/
 
     // Represents the action listener for the save menu item in the file menu
     public class SaveAction implements ActionListener {
@@ -753,8 +787,7 @@ public class BudgetRocket extends JFrame {
                 jsonWriter.close();
                 JOptionPane.showMessageDialog(mainFrame, "Budget successfully saved to " + BUDGET_DATA);
             } catch (FileNotFoundException exception) {
-                JOptionPane.showMessageDialog(mainFrame, "Unable to save budget to " + BUDGET_DATA,
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                printErrorMessage("Unable to save budget to " + BUDGET_DATA);
             }
         }
     }
@@ -775,10 +808,13 @@ public class BudgetRocket extends JFrame {
                 updateBudgetPanel();
                 JOptionPane.showMessageDialog(mainFrame, "Budget successfully loaded from " + BUDGET_DATA);
             } catch (IOException exception) {
-                JOptionPane.showMessageDialog(mainFrame, "Unable to load budget from " + BUDGET_DATA,
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                printErrorMessage("Unable to load budget from " + BUDGET_DATA);
             }
         }
     }
 
+    // EFFECTS: outputs an error message
+    private void printErrorMessage(String message) {
+        JOptionPane.showMessageDialog(mainFrame, message, "Error!", JOptionPane.ERROR_MESSAGE);
+    }
 }

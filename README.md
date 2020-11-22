@@ -17,3 +17,9 @@ one I can see myself using on a daily basis to manage my own finances.
 - As a user, I want to be able to view the total dollar amount of expense/income in my budget
 - As a user, I want to be able to save my budget to file
 - As a user, I want to be able to load my budget from file
+
+## Phase 4: Task 2
+
+I chose to test and design a robust class in my model package. Entry and its subclasses, Expense and Income, are robust.
+Specifically, the constructor will throw an exception if it is called with a negative value for the amount or an 
+empty string for the description.
