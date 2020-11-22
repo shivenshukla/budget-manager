@@ -36,7 +36,7 @@ import static java.lang.Math.abs;
 // https://stackoverflow.com/questions/6578205/swing-jlabel-text-change-on-the-running-application
 
 // Represents the GUI of the budget application
-public class BudgetRocket extends JFrame {
+public class BudgetRocketGUI extends JFrame {
     private static final String BUDGET_DATA = "./data/budget.json";
 
     private static final Color BACKGROUND_COLOR = new Color(211, 211, 211);
@@ -80,7 +80,7 @@ public class BudgetRocket extends JFrame {
 
     // MODIFIES: this
     // EFFECTS: runs the application
-    public BudgetRocket() {
+    public BudgetRocketGUI() {
         initializeBudgetFields();
         initializePanels();
         initializeMainFrame();
@@ -99,9 +99,7 @@ public class BudgetRocket extends JFrame {
         jsonWriter = new JsonWriter(BUDGET_DATA);
     }
 
-    /**
-     * Main frame
-     **/
+    /** Main frame **/
 
     // MODIFIES: this
     // EFFECTS: constructs the main frame
@@ -120,9 +118,7 @@ public class BudgetRocket extends JFrame {
         mainFrame.setVisible(true);
     }
 
-    /**
-     * Menu Bar
-     **/
+    /** Menu Bar **/
 
     // MODIFIES: this
     // EFFECTS: constructs a menu bar and adds it to the main frame
@@ -180,9 +176,7 @@ public class BudgetRocket extends JFrame {
         return viewMenu;
     }
 
-    /**
-     * Panels
-     **/
+    /** Panels **/
 
     // MODIFIES: this
     // EFFECTS: constructs all relevant JPanels
@@ -566,9 +560,7 @@ public class BudgetRocket extends JFrame {
         }
     }
 
-    /**
-     * ActionListener for navigation
-     **/
+    /** ActionListener for navigation **/
 
     // Represents the action listener for all menu items in the menu bar
     public class OpenAction implements ActionListener {
@@ -595,9 +587,7 @@ public class BudgetRocket extends JFrame {
         }
     }
 
-    /**
-     * ActionListeners for entry operations
-     **/
+    /** ActionListeners for entry operations **/
 
     // Represents the action listener for the add button in a report panel
     public class AddAction implements ActionListener {
@@ -770,9 +760,7 @@ public class BudgetRocket extends JFrame {
         }
     }
 
-    /**
-     * ActionListeners for Data Persistence
-     **/
+    /** ActionListeners for Data Persistence **/
 
     // Represents the action listener for the save menu item in the file menu
     public class SaveAction implements ActionListener {

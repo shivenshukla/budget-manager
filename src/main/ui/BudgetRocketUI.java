@@ -17,7 +17,7 @@ import static java.lang.Math.abs;
 // Represents the Budget application
 // This code is modeled on the ui package of https://github.students.cs.ubc.ca/CPSC210/TellerApp;
 // Data persistence methods were modeled from the ui package of https://github.com/stleary/JSON-java
-public class BudgetRocketOld {
+public class BudgetRocketUI {
     private static final String BUDGET_DATA = "./data/budget.json";
 
     private Budget budget;
@@ -29,7 +29,7 @@ public class BudgetRocketOld {
     private JsonReader jsonReader;
 
     // EFFECTS: runs the budget application
-    public BudgetRocketOld() {
+    public BudgetRocketUI() {
         runBudget();
     }
 
@@ -70,9 +70,7 @@ public class BudgetRocketOld {
         jsonReader = new JsonReader(BUDGET_DATA);
     }
 
-    /**
-     * methods for processing user command
-     **/
+    /** methods for processing user command **/
 
     // MODIFIES: this
     // EFFECTS: processes user command for main menu
@@ -120,9 +118,7 @@ public class BudgetRocketOld {
         }
     }
 
-    /**
-     * methods for viewing reports in budget
-     **/
+    /** methods for viewing reports in budget **/
 
     // EFFECTS: displays the budget report
     private void viewBudgetReport() {
@@ -212,9 +208,7 @@ public class BudgetRocketOld {
         }
     }
 
-    /**
-     * methods for displaying menus to user
-     **/
+    /** methods for displaying menus to user **/
 
     // EFFECTS: displays the main menu of options to the user
     private void displayMainMenu() {
@@ -245,9 +239,7 @@ public class BudgetRocketOld {
         System.out.println("\td -> description");
     }
 
-    /**
-     * methods for doing operations
-     **/
+    /** methods for doing operations **/
 
     // MODIFIES: this
     // EFFECTS: adds a new income to the incomeReport, if amount >= 0
@@ -411,9 +403,7 @@ public class BudgetRocketOld {
         }
     }
 
-    /**
-     * methods for data persistence
-     **/
+    /** methods for data persistence **/
 
     // MODIFIES: this
     // EFFECTS: saves budget to file
