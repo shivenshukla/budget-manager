@@ -1,0 +1,64 @@
+{
+  "expenseReport": {
+    "entries": [
+      {
+        "description": "",
+        "amount": 100,
+        "date": {
+          "year": 2020,
+          "month": 10,
+          "day": 25
+        }
+      },
+      {
+        "description": "test expense 2",
+        "amount": -1234.56,
+        "date": {
+          "year": 1995,
+          "month": 2,
+          "day": 14
+        }
+      },
+      {
+        "description": "test expense 3",
+        "amount": 1.50,
+        "date": {
+          "year": 2008,
+          "month": 5,
+          "day": 30
+        }
+      }
+    ]
+  },
+  "incomeReport": {
+    "entries": [
+      {
+        "description": "     ",
+        "amount": "14100",
+        "date": {
+          "year": 2019,
+          "month": 8,
+          "day": 29
+        }
+      },
+      {
+        "description": "test income 2",
+        "amount": -2000.00,
+        "date": {
+          "year": 2020,
+          "month": 2,
+          "day": 1
+        }
+      },
+      {
+        "description": "test income 3",
+        "amount": 340.00,
+        "date": {
+          "year": 2001,
+          "month": 10,
+          "day": 20
+        }
+      }
+    ]
+  }
+}

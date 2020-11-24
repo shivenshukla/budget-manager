@@ -93,6 +93,28 @@ public class JsonReaderTest extends JsonTest{
         }
     }
 
+    @Test
+    void testReaderInvalidEntries() {
+        reader = new JsonReader("./data/testReaderInvalidEntries.json");
+        try {
+            testBudget = reader.read();
+
+            Report expenseReport = testBudget.getExpenseReport();
+            Report incomeReport = testBudget.getIncomeReport();
+
+            assertEquals(1, expenseReport.size());
+            assertEquals(1, incomeReport.size());
+
+            Entry validExpense = expenseReport.getAllEntries().get(0);
+            Entry validIncome = incomeReport.getAllEntries().get(0);
+
+            checkEntry(validExpense, "test expense 3", 1.50, 2008, 5, 30);
+            checkEntry(validIncome, "test income 3", 340.00, 2001, 10, 20);
+        } catch (IOException e) {
+            fail("IOException should not have been thrown");
+        }
+    }
+
     // REQUIRES: expenseReport has at least 3 entries
     // EFFECTS: checks whether expenses were read correctly
     private void checkExpenses(Report expenseReport) {

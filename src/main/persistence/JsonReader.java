@@ -87,7 +87,7 @@ public class JsonReader {
             Expense expense = new Expense(description, amount, date);
             budget.addExpense(expense);
         } catch (Exception e) {
-            e.printStackTrace();
+            // do not add the expense to the budget
         }
     }
 
@@ -102,7 +102,7 @@ public class JsonReader {
             Income income = new Income(description, amount, date);
             budget.addIncome(income);
         } catch (Exception e) {
-            e.printStackTrace();
+            // do not add the income to the budget
         }
     }
 
