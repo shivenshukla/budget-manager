@@ -21,9 +21,9 @@ public abstract class Entry implements Writable {
 
     // EFFECTS: constructs an entry with given description, amount (in dollars) and date of entry;
     //          throws NegativeInputException if amount is negative;
-    //          throws EmptyStringException if description is an empty string
+    //          throws EmptyStringException if description is an empty string or only contains whitespace
     public Entry(String description, double amount, Calendar date) throws EmptyStringException, NegativeInputException {
-        if (description.isEmpty()) {
+        if (description.trim().isEmpty()) {
             throw  new EmptyStringException();
         } else if (amount < 0) {
             throw  new NegativeInputException();
@@ -35,13 +35,19 @@ public abstract class Entry implements Writable {
 
     // Setters
 
+    // MODIFIES: this
+    // EFFECTS: sets the description field;
+    //          throws EmptyStringException if description is an empty string or only contains whitespace
     public void setDescription(String description) throws EmptyStringException {
-        if (description.isEmpty()) {
+        if (description.trim().isEmpty()) {
             throw new EmptyStringException();
         }
         this.description = description;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets the amount field;
+    //          throws NegativeInputException if the given amount is negative
     public void setAmount(double amount) throws NegativeInputException {
         if (amount < 0) {
             throw new NegativeInputException();

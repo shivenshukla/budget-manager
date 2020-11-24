@@ -255,9 +255,9 @@ public class BudgetRocketUI {
             Income i = new Income(description, amount, date);
             budget.addIncome(i);
         } catch (NegativeInputException e) {
-            System.out.println("The amount cannot be negative. No new entry was added.");
+            System.out.println("\nThe amount cannot be negative. No new entry was added.");
         } catch (EmptyStringException e) {
-            System.out.println("The description cannot be empty. No new entry was added.");
+            System.out.println("\nThe description cannot be empty. No new entry was added.");
         } finally {
             System.out.println();
         }
@@ -277,9 +277,9 @@ public class BudgetRocketUI {
             Expense e = new Expense(description, amount, date);
             budget.addExpense(e);
         } catch (NegativeInputException e) {
-            System.out.println("The amount cannot be negative. No new entry was added.");
+            System.out.println("\nThe amount cannot be negative. No new entry was added.");
         } catch (EmptyStringException e) {
-            System.out.println("The description cannot be empty. No new entry was added.");
+            System.out.println("\nThe description cannot be empty. No new entry was added.");
         } finally {
             System.out.println();
         }
@@ -385,7 +385,7 @@ public class BudgetRocketUI {
             entry.setAmount(amount);
             System.out.println("The entry was modified");
         } catch (NegativeInputException e) {
-            System.out.println("The amount cannot be negative. The entry was not modified\n");
+            System.out.println("\nThe amount cannot be negative. The entry was not modified\n");
         }
     }
 
@@ -399,7 +399,7 @@ public class BudgetRocketUI {
             entry.setDescription(description);
             System.out.println("The entry was modified");
         } catch (EmptyStringException e) {
-            System.out.println("The description cannot be empty. The entry was not modified\n");
+            System.out.println("\nThe description cannot be empty. The entry was not modified\n");
         }
     }
 

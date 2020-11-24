@@ -20,15 +20,18 @@ one I can see myself using on a daily basis to manage my own finances.
 
 ## Phase 4: Task 2
 
-I chose to test and design a robust class in my model package. Entry and its subclasses, Expense and Income, are robust.
-Specifically, the constructor will throw an exception if it is called with a negative value for the amount or an 
-empty string for the description. Entry.setDate and Entry.setAmount will also throw exceptions.
+I chose to test and design a robust class in my model package. Entry, Expense, and Income, are robust. 
+The constructor for each class throws an EmptyStringException if the description parameter is an empty string or 
+consists of whitespace only. Also, the constructor throws a NegativeInputException if the amount parameter is negative.
+Entry.setDescription and Entry.setAmount also throw these exceptions respectively.
 
 ## Phase 4: Task 3
 
+If I had more time to work on this project, I would...
+
 - Remove Report fields from BudgetRocketUI and BudgetRocketGUI to reduce coupling
-- Reduce duplication and increase cohesion in BudgetRocketGUI
-  - Create separate classes for each of the JPanels
+- Create a type hierarchy for the ui package to reduce duplication and increase cohesion in BudgetRocketGUI
+  - Each distinct JPanel in the GUI would become a class
     - BudgetPanel
     - (abstract) ReportPanel
       - subclasses: expenseReportPanel, incomeReportPanel
