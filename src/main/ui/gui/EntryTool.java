@@ -37,13 +37,19 @@ public class EntryTool {
 
         SpinnerNumberModel dayModel = new SpinnerNumberModel(currentDay, 1, 31, 1);
         daySpinner = new JSpinner(dayModel);
+        JSpinner.DefaultEditor daySpinnerEditor = (JSpinner.DefaultEditor)daySpinner.getEditor();
+        daySpinnerEditor.getTextField().setHorizontalAlignment(JTextField.CENTER);
 
         SpinnerNumberModel monthModel = new SpinnerNumberModel(currentMonth, 1, 12, 1);
         monthSpinner = new JSpinner(monthModel);
+        JSpinner.DefaultEditor monthSpinnerEditor = (JSpinner.DefaultEditor)monthSpinner.getEditor();
+        monthSpinnerEditor.getTextField().setHorizontalAlignment(JTextField.CENTER);
 
         SpinnerNumberModel yearModel = new SpinnerNumberModel(currentYear, 1900, 2100, 1);
         yearSpinner = new JSpinner(yearModel);
         yearSpinner.setEditor(new JSpinner.NumberEditor(yearSpinner, "#"));
+        JSpinner.DefaultEditor yearSpinnerEditor = (JSpinner.DefaultEditor)yearSpinner.getEditor();
+        yearSpinnerEditor.getTextField().setHorizontalAlignment(JTextField.CENTER);
     }
 
     // MODIFIES: this

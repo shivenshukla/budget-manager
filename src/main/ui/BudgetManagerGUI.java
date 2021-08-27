@@ -31,12 +31,11 @@ import static java.lang.Math.abs;
 //  - How to Use Root Panes
 //  - How to Use Scroll Panes
 
-// Code related to event handling was learned from the reading the example given on the
-// Phase 3 instructions page on edX edge; the example was taken from a StackOverflow post
+// Code related to event handling was learned from the reading the following stackoverflow post
 // https://stackoverflow.com/questions/6578205/swing-jlabel-text-change-on-the-running-application
 
 // Represents the GUI of the budget application
-public class BudgetRocketGUI extends JFrame {
+public class BudgetManagerGUI extends JFrame {
     private static final String BUDGET_DATA = "./data/budget.json";
 
     private static final Color BACKGROUND_COLOR = new Color(211, 211, 211);
@@ -80,7 +79,7 @@ public class BudgetRocketGUI extends JFrame {
 
     // MODIFIES: this
     // EFFECTS: runs the application
-    public BudgetRocketGUI() {
+    public BudgetManagerGUI() {
         initializeBudgetFields();
         initializePanels();
         initializeMainFrame();
@@ -104,7 +103,7 @@ public class BudgetRocketGUI extends JFrame {
     // MODIFIES: this
     // EFFECTS: constructs the main frame
     public void initializeMainFrame() {
-        mainFrame = new JFrame("Budget Rocket");
+        mainFrame = new JFrame("Budget Manager");
         mainFrame.setLayout(new BorderLayout());
         mainFrame.setLocation(X_POS, Y_POS);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -195,9 +194,9 @@ public class BudgetRocketGUI extends JFrame {
     // EFFECTS: constructs a JPanel which will serve as the home page of the application
     public void initializeMainPanel() {
         mainPanel = new JPanel();
-        mainPanel.setBackground(Color.RED);
+        mainPanel.setBackground(Color.WHITE);
 
-        Icon mainPhoto = new ImageIcon("./data/budgetRocketHome.jpg");
+        Icon mainPhoto = new ImageIcon("./data/BudgetManager.jpg");
         JLabel photo = new JLabel(mainPhoto);
         mainPanel.add(photo);
     }

@@ -14,9 +14,10 @@ import java.util.Scanner;
 
 import static java.lang.Math.abs;
 
-// Represents the Budget application
 // Data persistence methods were modeled from the ui package of https://github.com/stleary/JSON-java
-public class BudgetRocketUI {
+
+// Represents the Budget application
+public class BudgetManagerUI {
     private static final String BUDGET_DATA = "./data/budget.json";
 
     private Budget budget;
@@ -28,7 +29,7 @@ public class BudgetRocketUI {
     private JsonReader jsonReader;
 
     // EFFECTS: runs the budget application
-    public BudgetRocketUI() {
+    public BudgetManagerUI() {
         runBudget();
     }
 
