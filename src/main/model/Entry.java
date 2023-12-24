@@ -9,10 +9,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-// Documentation for Calendar: https://docs.oracle.com/javase/7/docs/api/java/util/Calendar.html
-// Documentation for DecimalFormat: https://docs.oracle.com/javase/7/docs/api/java/text/DecimalFormat.html
-// Documentation for SimpleDateFormat: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
-
 // Represents an entry for a report having a description, amount (in dollars), and date of entry
 public abstract class Entry implements Writable {
     protected String description;
@@ -32,8 +28,6 @@ public abstract class Entry implements Writable {
         this.amount = amount;
         this.date = date;
     }
-
-    // Setters
 
     // MODIFIES: this
     // EFFECTS: sets the description field;
@@ -63,8 +57,6 @@ public abstract class Entry implements Writable {
         this.date.set(year, month, day);
     }
 
-
-    // Getters
     public Entry getEntry() {
         return this;
     }
@@ -86,13 +78,10 @@ public abstract class Entry implements Writable {
     public String toString() {
         DecimalFormat decimalFormat = new DecimalFormat("###,##0.00");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd yyyy");
-
         String amountStr = decimalFormat.format(this.amount);
         amountStr = String.format("%-30s", amountStr);
-
         String dateStr = simpleDateFormat.format(this.date.getTime());
         dateStr = String.format("%-30s", dateStr);
-
         return  dateStr + "$" + amountStr + this.description;
     }
 

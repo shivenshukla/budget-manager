@@ -49,9 +49,7 @@ public abstract class ReportTest {
     @Test
     void testAddEntryEmpty() {
         assertEquals(0, testReport.size());
-
         testReport.addEntry(entry1);
-
         assertEquals(1, testReport.size());
         assertTrue(testReport.contains(entry1));
     }
@@ -59,14 +57,10 @@ public abstract class ReportTest {
     @Test
     void testAddEntryMany() {
         assertEquals(0, testReport.size());
-
         testReport.addEntry(entry1);
         testReport.addEntry(entry2);
-
         assertEquals(2, testReport.size());
-
         testReport.addEntry(entry3);
-
         assertEquals(3, testReport.size());
         assertTrue(testReport.contains(entry1));
         assertTrue(testReport.contains(entry2));
@@ -76,14 +70,10 @@ public abstract class ReportTest {
     @Test
     void testDeleteEntryOne() {
         assertEquals(0, testReport.size());
-
         testReport.addEntry(entry1);
-
         assertEquals(1, testReport.size());
         assertTrue(testReport.contains(entry1));
-
         testReport.deleteEntry(entry1);
-
         assertEquals(0, testReport.size());
         assertFalse(testReport.contains(entry1));
     }
@@ -91,23 +81,17 @@ public abstract class ReportTest {
     @Test
     void testDeleteEntryMany() {
         assertEquals(0, testReport.size());
-
         addAllEntries();
-
         assertEquals(3, testReport.size());
         assertTrue(testReport.contains(entry1));
         assertTrue(testReport.contains(entry2));
         assertTrue(testReport.contains(entry3));
-
         testReport.deleteEntry(entry2);
-
         assertEquals(2, testReport.size());
         assertTrue(testReport.contains(entry1));
         assertFalse(testReport.contains(entry2));
         assertTrue(testReport.contains(entry3));
-
         testReport.deleteEntry(entry1);
-
         assertEquals(1, testReport.size());
         assertFalse(testReport.contains(entry1));
         assertTrue(testReport.contains(entry3));
@@ -117,26 +101,18 @@ public abstract class ReportTest {
     void testGetEntriesInRangeNoneInRange() {
         Calendar startDate = new GregorianCalendar(YEAR_1 - 1, Calendar.DECEMBER, DAY_1);
         Calendar endDate = new GregorianCalendar(YEAR_1, Calendar.APRIL, DAY_1 - 1);
-
         addAllEntries();
-
         assertEquals(3, testReport.size());
-
         List<Entry> entries = testReport.getEntriesInRange(startDate, endDate);
-
         assertEquals(0, entries.size());
     }
 
     @Test
     void testGetEntriesInRangeOneInRange() {
         Calendar endDate = new GregorianCalendar(YEAR_3, Calendar.JANUARY, DAY_2);
-
         addAllEntries();
-
         assertEquals(3, testReport.size());
-
         List<Entry> entries = testReport.getEntriesInRange(date2, endDate);
-
         assertEquals(1, entries.size());
         assertTrue(entries.contains(entry2));
     }
@@ -144,11 +120,8 @@ public abstract class ReportTest {
     @Test
     void testGetEntriesInRangeAllInRange() {
         addAllEntries();
-
         assertEquals(3, testReport.size());
-
         List<Entry> entries = testReport.getEntriesInRange(date1, date3);
-
         assertEquals(3, entries.size());
         assertTrue(entries.contains(entry1));
         assertTrue(entries.contains(entry2));
@@ -158,20 +131,15 @@ public abstract class ReportTest {
     @Test
     void testGetAllEntriesEmpty() {
         assertEquals(0, testReport.size());
-
         List<Entry> entries = testReport.getAllEntries();
-
         assertEquals(0, entries.size());
     }
 
     @Test
     void testGetAllEntriesMany() {
         addAllEntries();
-
         assertEquals(3, testReport.size());
-
         List<Entry> entries = testReport.getAllEntries();
-
         assertEquals(3, entries.size());
         assertTrue(entries.contains(entry1));
         assertTrue(entries.contains(entry2));
@@ -187,9 +155,7 @@ public abstract class ReportTest {
     @Test
     void testSumEntriesMany() {
         addAllEntries();
-
         assertEquals(3, testReport.size());
-
         double total = entry1.getAmount() + entry2.getAmount() + entry3.getAmount();
         assertEquals(total, testReport.sum());
     }
@@ -203,7 +169,6 @@ public abstract class ReportTest {
     @Test
     void testIsEmptyMany() {
         addAllEntries();
-
         assertEquals(3, testReport.size());
         assertFalse(testReport.isEmpty());
     }

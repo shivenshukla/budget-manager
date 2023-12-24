@@ -12,5 +12,5 @@ Budget Manager is a Java desktop application that manages a list of income and e
 ## Technologies
 
 * Java
-* JUnit
-* JSON
+* Swing
+* Gradle

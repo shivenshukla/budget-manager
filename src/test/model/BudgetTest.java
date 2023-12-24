@@ -40,7 +40,6 @@ public class BudgetTest {
     void testConstructor() {
         Report expenseReport = testBudget.getExpenseReport();
         Report incomeReport = testBudget.getIncomeReport();
-
         assertEquals(0, expenseReport.size());
         assertEquals(0, incomeReport.size());
     }
@@ -49,18 +48,13 @@ public class BudgetTest {
     void testAddExpense() {
         try {
             testExpense = new Expense(DESCRIPTION_2, AMOUNT_2, date2);
-
             Report otherExpenseReport = testBudget.getExpenseReport();
             Report otherIncomeReport = testBudget.getIncomeReport();
-
             assertEquals(0, otherExpenseReport.size());
             assertEquals(0, otherIncomeReport.size());
-
             testBudget.addExpense(testExpense);
-
             assertEquals(1, otherExpenseReport.size());
             assertEquals(0, otherIncomeReport.size());
-
             assertTrue(otherExpenseReport.contains(testExpense));
             assertFalse(otherIncomeReport.contains(testExpense));
         } catch (NegativeInputException e) {
@@ -74,18 +68,13 @@ public class BudgetTest {
     void testAddIncome() {
         try {
             testIncome = new Income(DESCRIPTION_1, AMOUNT_1, date1);
-
             Report otherExpenseReport = testBudget.getExpenseReport();
             Report otherIncomeReport = testBudget.getIncomeReport();
-
             assertEquals(0, otherExpenseReport.size());
             assertEquals(0, otherIncomeReport.size());
-
             testBudget.addIncome(testIncome);
-
             assertEquals(0, otherExpenseReport.size());
             assertEquals(1, otherIncomeReport.size());
-
             assertFalse(otherExpenseReport.contains(testIncome));
             assertTrue(otherIncomeReport.contains(testIncome));
         } catch (NegativeInputException e) {
@@ -100,7 +89,6 @@ public class BudgetTest {
         try {
             testExpense = new Expense(DESCRIPTION_2, AMOUNT_2, date2);
             testIncome = new Income(DESCRIPTION_1, AMOUNT_1, date1);
-
             addEntries(testExpense, testIncome);
             assertTrue(testBudget.isSurplus());
         } catch (NegativeInputException e) {
@@ -115,7 +103,6 @@ public class BudgetTest {
         try {
             testExpense = new Expense(DESCRIPTION_1, AMOUNT_1, date2);
             testIncome = new Income(DESCRIPTION_2, AMOUNT_1, date1);
-
             addEntries(testExpense, testIncome);
             assertFalse(testBudget.isSurplus());
         } catch (NegativeInputException e) {
@@ -130,7 +117,6 @@ public class BudgetTest {
         try {
             testExpense = new Expense(DESCRIPTION_1, AMOUNT_1, date1);
             testIncome = new Income(DESCRIPTION_2, AMOUNT_2, date2);
-
             addEntries(testExpense, testIncome);
             assertTrue(testBudget.isDeficit());
         } catch (NegativeInputException e) {
@@ -145,7 +131,6 @@ public class BudgetTest {
         try {
             testExpense = new Expense(DESCRIPTION_1, AMOUNT_1, date2);
             testIncome = new Income(DESCRIPTION_2, AMOUNT_1, date1);
-
             addEntries(testExpense, testIncome);
             assertFalse(testBudget.isDeficit());
         } catch (NegativeInputException e) {
@@ -160,15 +145,11 @@ public class BudgetTest {
         try {
             testExpense = new Expense(DESCRIPTION_2, AMOUNT_2, date2);
             testIncome = new Income(DESCRIPTION_1, AMOUNT_1, date1);
-
             addEntries(testExpense, testIncome);
-
             Report otherExpenseReport = testBudget.getExpenseReport();
             Report otherIncomeReport = testBudget.getIncomeReport();
-
             assertEquals(1, otherExpenseReport.size());
             assertEquals(1, otherIncomeReport.size());
-
             assertTrue(otherExpenseReport.contains(testExpense));
             assertTrue(otherIncomeReport.contains(testIncome));
         } catch (NegativeInputException e) {

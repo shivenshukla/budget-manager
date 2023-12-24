@@ -6,8 +6,6 @@ import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-// This code is modeled on the JsonTest class from https://github.com/stleary/JSON-java
-
 // Helper methods for JsonReaderTest and JsonWriterTest
 public class JsonTest {
 

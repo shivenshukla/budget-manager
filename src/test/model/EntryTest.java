@@ -66,7 +66,6 @@ public abstract class EntryTest {
     @Test
     void testSetDateIntegerParameters() {
         testEntry.setDate(2019, 6, 21);
-
         assertEquals(2019, testEntry.getDate().get(Calendar.YEAR));
         assertEquals(6, testEntry.getDate().get(Calendar.MONTH));
         assertEquals(21, testEntry.getDate().get(Calendar.DAY_OF_MONTH));
@@ -75,7 +74,6 @@ public abstract class EntryTest {
     @Test
     void testSetDateCalendarParameter() {
         testEntry.setDate(new GregorianCalendar(2013, Calendar.DECEMBER, 15));
-
         assertEquals(2013, testEntry.getDate().get(Calendar.YEAR));
         assertEquals(11, testEntry.getDate().get(Calendar.MONTH));
         assertEquals(15, testEntry.getDate().get(Calendar.DAY_OF_MONTH));
