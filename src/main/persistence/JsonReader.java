@@ -14,8 +14,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.stream.Stream;
 
-// This code is modeled on the JsonReader class from https://github.com/stleary/JSON-java
-
 // Represents a reader that reads budget from JSON data stored in file
 public class JsonReader {
     private String source;
@@ -37,7 +35,6 @@ public class JsonReader {
     // throws IOException if an error occurs while reading data from source file
     public String readFile(String source) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
-
         try (Stream<String> stream = Files.lines(Paths.get(source),StandardCharsets.UTF_8)) {
             stream.forEach(s -> contentBuilder.append(s));
         }
@@ -57,7 +54,6 @@ public class JsonReader {
     public void addExpenseReport(Budget budget, JSONObject jsonObject) {
         JSONObject jsonReport = jsonObject.getJSONObject("expenseReport");
         JSONArray jsonArray = jsonReport.getJSONArray("entries");
-
         for (Object json: jsonArray) {
             JSONObject nextExpense = (JSONObject) json;
             addExpense(budget, nextExpense);
@@ -69,7 +65,6 @@ public class JsonReader {
     public void addIncomeReport(Budget budget, JSONObject jsonObject) {
         JSONObject jsonReport = jsonObject.getJSONObject("incomeReport");
         JSONArray jsonArray = jsonReport.getJSONArray("entries");
-
         for (Object json: jsonArray) {
             JSONObject nextIncome = (JSONObject) json;
             addIncome(budget, nextIncome);
@@ -83,7 +78,6 @@ public class JsonReader {
             String description = jsonObject.getString("description");
             double amount = jsonObject.getDouble("amount");
             Calendar date = getDate(jsonObject);
-
             Expense expense = new Expense(description, amount, date);
             budget.addExpense(expense);
         } catch (Exception e) {
@@ -98,7 +92,6 @@ public class JsonReader {
             String description = jsonObject.getString("description");
             double amount = jsonObject.getDouble("amount");
             Calendar date = getDate(jsonObject);
-
             Income income = new Income(description, amount, date);
             budget.addIncome(income);
         } catch (Exception e) {
@@ -109,11 +102,9 @@ public class JsonReader {
     // EFFECTS: parses date from JSON object and returns it
     private Calendar getDate(JSONObject jsonObject) {
         JSONObject jsonDate = jsonObject.getJSONObject("date");
-
         int year = jsonDate.getInt("year");
         int month = jsonDate.getInt("month");
         int day = jsonDate.getInt("day");
-
         return new GregorianCalendar(year, month, day);
     }
 }

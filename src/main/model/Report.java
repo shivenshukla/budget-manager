@@ -43,7 +43,6 @@ public abstract class Report implements Writable {
     // EFFECTS: returns all entries in the report from startDate to endDate, inclusive
     public List<Entry> getEntriesInRange(Calendar startDate, Calendar endDate) {
         List<Entry> entriesInRange = new ArrayList<>();
-
         for (Entry e : entries) {
             if (!(e.date.before(startDate) || e.date.after(endDate))) {
                 entriesInRange.add(e);
@@ -60,7 +59,6 @@ public abstract class Report implements Writable {
     // EFFECTS: returns the total amount of all entries
     public double sum() {
         double result = 0;
-
         for (Entry e: entries) {
             result += e.getAmount();
         }
@@ -83,7 +81,6 @@ public abstract class Report implements Writable {
     // EFFECTS: returns entries in the Report as a JSON array
     protected JSONArray entriesToJSon() {
         JSONArray jsonArray = new JSONArray();
-
         for (Entry e: this.entries) {
             jsonArray.put(e.toJson());
         }

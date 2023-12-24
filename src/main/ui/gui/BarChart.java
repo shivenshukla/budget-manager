@@ -108,7 +108,7 @@ public class BarChart extends JPanel {
     }
 
     // EFFECTS: returns the dollar amount per height of the bar chart;
-    // this ratio is used to determine the height and and corresponding y-axis labels of each bar
+    // this ratio is used to determine the height and corresponding y-axis labels of each bar
     public double getHeightRatio() {
         return Math.max(expenseTotal, incomeTotal) / (CHART_Y2 - CHART_Y1);
     }

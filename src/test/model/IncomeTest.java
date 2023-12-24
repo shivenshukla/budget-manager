@@ -27,7 +27,6 @@ public class IncomeTest extends EntryTest{
     void testConstructorNoException() {
         try {
             testEntry = new Income(DESCRIPTION, 0, date);
-
             assertEquals(DESCRIPTION, testEntry.getDescription());
             assertEquals(0, testEntry.getAmount());
             assertEquals(2020, testEntry.getDate().get(Calendar.YEAR));

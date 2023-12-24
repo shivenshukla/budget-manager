@@ -27,7 +27,6 @@ public class ExpenseTest extends EntryTest{
     void testConstructorNoException() {
         try {
             testEntry = new Expense(DESCRIPTION, 0, date);
-
             assertEquals(DESCRIPTION, testEntry.getDescription());
             assertEquals(0, testEntry.getAmount());
             assertEquals(2020, testEntry.getDate().get(Calendar.YEAR));
