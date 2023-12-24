@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="model.IncomeReportTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2023-12-24T20:35:10" hostname="LAPTOP-M4SUCN8H" time="0.018">
+  <properties/>
+  <testcase name="testGetEntriesInRangeAllInRange()" classname="model.IncomeReportTest" time="0.0"/>
+  <testcase name="testDeleteEntryOne()" classname="model.IncomeReportTest" time="0.001"/>
+  <testcase name="testGetAllEntriesMany()" classname="model.IncomeReportTest" time="0.0"/>
+  <testcase name="testIsEmptyMany()" classname="model.IncomeReportTest" time="0.001"/>
+  <testcase name="testAddEntryEmpty()" classname="model.IncomeReportTest" time="0.0"/>
+  <testcase name="testDeleteEntryMany()" classname="model.IncomeReportTest" time="0.0"/>
+  <testcase name="testAddEntryMany()" classname="model.IncomeReportTest" time="0.001"/>
+  <testcase name="testSumEntriesEmpty()" classname="model.IncomeReportTest" time="0.001"/>
+  <testcase name="testGetEntriesInRangeOneInRange()" classname="model.IncomeReportTest" time="0.0"/>
+  <testcase name="testSumEntriesMany()" classname="model.IncomeReportTest" time="0.001"/>
+  <testcase name="testConstructor()" classname="model.IncomeReportTest" time="0.001"/>
+  <testcase name="testGetAllEntriesEmpty()" classname="model.IncomeReportTest" time="0.0"/>
+  <testcase name="testGetEntriesInRangeNoneInRange()" classname="model.IncomeReportTest" time="0.001"/>
+  <testcase name="testIsEmptyEmpty()" classname="model.IncomeReportTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

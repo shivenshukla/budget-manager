@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="model.ExpenseTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2023-12-24T20:35:10" hostname="LAPTOP-M4SUCN8H" time="0.023">
+  <properties/>
+  <testcase name="testSetDescriptionExpectEmptyStringException()" classname="model.ExpenseTest" time="0.001"/>
+  <testcase name="testGetEntry()" classname="model.ExpenseTest" time="0.001"/>
+  <testcase name="testSetAmountNoException()" classname="model.ExpenseTest" time="0.0"/>
+  <testcase name="testToString()" classname="model.ExpenseTest" time="0.009"/>
+  <testcase name="testSetDateIntegerParameters()" classname="model.ExpenseTest" time="0.0"/>
+  <testcase name="testSetDescriptionNoException()" classname="model.ExpenseTest" time="0.0"/>
+  <testcase name="testSetAmountExpectNegativeInputException()" classname="model.ExpenseTest" time="0.001"/>
+  <testcase name="testSetDateCalendarParameter()" classname="model.ExpenseTest" time="0.001"/>
+  <testcase name="testConstructorNoException()" classname="model.ExpenseTest" time="0.0"/>
+  <testcase name="testConstructorExpectEmptyStringException()" classname="model.ExpenseTest" time="0.001"/>
+  <testcase name="testConstructorExpectNegativeInputException()" classname="model.ExpenseTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
